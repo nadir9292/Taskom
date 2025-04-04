@@ -19,7 +19,13 @@ public class SprintController {
   private final SprintService sprintService;
 
   @GetMapping("/get-sprints")
-  public List<Sprints> getAllScrumSprints() {
-    return sprintService.getAllSprints();
-  }
+    public List<Sprints> getAllScrumSprints() {
+      try {
+        return sprintService.getAllSprints();
+      } catch (Exception e) {
+        System.err.println("Erreur lors de la récupération des sprints : " + e.getMessage());
+        e.printStackTrace();
+        return List.of();
+      }
+    }
 }
