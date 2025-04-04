@@ -26,8 +26,10 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "**/*.js",
     ".next/types/**/*.ts",
-    "postcss.config.mjs"
+    "postcss.config.mjs",
+    "src/contexts/ApiContext.js"
   ],
   "exclude": ["node_modules"]
 }

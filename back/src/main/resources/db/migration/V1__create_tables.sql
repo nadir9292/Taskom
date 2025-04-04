@@ -14,6 +14,7 @@ CREATE TABLE scrum_steps (
 
 CREATE TABLE scrum_tabs (
     id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
     list_of_scrum_step_id TEXT[]
 );
 
@@ -35,3 +36,20 @@ CREATE TABLE sprints (
     list_of_members_id TEXT[],
     history TEXT[]
 );
+
+INSERT INTO users (first_name, last_name, email, profil_image) VALUES
+('Alice', 'Durand', 'alice.durand@example.com', 'alice.jpg'),
+('Bob', 'Martin', 'bob.martin@example.com', 'bob.jpg'),
+('Charlie', 'Lemoine', 'charlie.lemoine@example.com', 'charlie.jpg'),
+('Diane', 'Dupont', 'diane.dupont@example.com', 'diane.jpg');
+
+INSERT INTO scrum_steps (title, list_of_id_sprint) VALUES
+('Backlog', ARRAY['1', '2']),
+('To Do', ARRAY['3', '4']),
+('In Progress', ARRAY['5']),
+('Done', ARRAY['6', '7']);
+
+INSERT INTO scrum_tabs (title, list_of_scrum_step_id) VALUES
+('Sprint 1', ARRAY['1', '2', '3']),
+('Sprint 2', ARRAY['4', '5', '6']),
+('Sprint 3', ARRAY['7']);

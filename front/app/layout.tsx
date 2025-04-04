@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import NavBar from '@/src/components/NavBar'
+import { ApiRoutesProvider } from '@/src/contexts/ApiContext'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -15,8 +16,10 @@ const RootLayout = ({
   return (
     <html lang="en">
       <body>
-        <NavBar />
-        {children}
+        <ApiRoutesProvider>
+          <NavBar />
+          {children}
+        </ApiRoutesProvider>
       </body>
     </html>
   )
