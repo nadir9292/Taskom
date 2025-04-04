@@ -30,4 +30,5 @@ public class Sprints {
   private Date enDate;
   private List<String> listOfMembersId;
   private List<String> history;
+  private String color;
 }

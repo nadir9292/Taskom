@@ -9,13 +9,15 @@ CREATE TABLE users (
 CREATE TABLE scrum_steps (
     id BIGSERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    list_of_id_sprint TEXT[]
+    list_of_id_sprint TEXT[],
+    color VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE scrum_tabs (
     id BIGSERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    list_of_scrum_step_id TEXT[]
+    list_of_scrum_step_id TEXT[],
+    color VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE teams (
@@ -34,7 +36,8 @@ CREATE TABLE sprints (
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP NOT NULL,
     list_of_members_id TEXT[],
-    history TEXT[]
+    history TEXT[],
+    color VARCHAR(255) NOT NULL
 );
 
 INSERT INTO users (first_name, last_name, email, profil_image) VALUES
@@ -44,12 +47,12 @@ INSERT INTO users (first_name, last_name, email, profil_image) VALUES
 ('Diane', 'Dupont', 'diane.dupont@example.com', 'diane.jpg');
 
 INSERT INTO scrum_steps (title, list_of_id_sprint) VALUES
-('Backlog', ARRAY['1', '2']),
-('To Do', ARRAY['3', '4']),
-('In Progress', ARRAY['5']),
-('Done', ARRAY['6', '7']);
+('Backlog', ARRAY['1', '2'], '#ffb3ba'),
+('To Do', ARRAY['3', '4'], '#ffdfba'),
+('In Progress', ARRAY['5'], '#ffffba'),
+('Done', ARRAY['6', '7'], '#baffc9');
 
 INSERT INTO scrum_tabs (title, list_of_scrum_step_id) VALUES
-('Sprint 1', ARRAY['1', '2', '3']),
-('Sprint 2', ARRAY['4', '5', '6']),
-('Sprint 3', ARRAY['7']);
+('Sprint 1', ARRAY['1', '2', '3'], '	#bae1ff'),
+('Sprint 2', ARRAY['4', '5', '6'], '	#bae1ff'),
+('Sprint 3', ARRAY['7'], '	#bae1ff');

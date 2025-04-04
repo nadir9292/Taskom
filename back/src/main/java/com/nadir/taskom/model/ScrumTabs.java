@@ -23,4 +23,5 @@ public class ScrumTabs {
    private Long id;
    private String title;
    private List<String> listOfScrumStepId;
+   private String color;
 }

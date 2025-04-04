@@ -23,4 +23,5 @@ public class ScrumSteps {
   private Long id;
   private String title;
   private List<String> listOfIdSprint;
+  private String color;
 }
