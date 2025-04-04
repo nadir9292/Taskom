@@ -46,13 +46,13 @@ INSERT INTO users (first_name, last_name, email, profil_image) VALUES
 ('Charlie', 'Lemoine', 'charlie.lemoine@example.com', 'charlie.jpg'),
 ('Diane', 'Dupont', 'diane.dupont@example.com', 'diane.jpg');
 
-INSERT INTO scrum_steps (title, list_of_id_sprint) VALUES
+INSERT INTO scrum_steps (title, list_of_id_sprint, color) VALUES
 ('Backlog', ARRAY['1', '2'], '#ffb3ba'),
 ('To Do', ARRAY['3', '4'], '#ffdfba'),
 ('In Progress', ARRAY['5'], '#ffffba'),
 ('Done', ARRAY['6', '7'], '#baffc9');
 
-INSERT INTO scrum_tabs (title, list_of_scrum_step_id) VALUES
+INSERT INTO scrum_tabs (title, list_of_scrum_step_id, color) VALUES
 ('Sprint 1', ARRAY['1', '2', '3'], '	#bae1ff'),
 ('Sprint 2', ARRAY['4', '5', '6'], '	#bae1ff'),
 ('Sprint 3', ARRAY['7'], '	#bae1ff');
