@@ -1,0 +1,28 @@
+# Global ignores
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+*.log
+
+# Ignore pour le front (Next.js)
+front/.next/
+front/out/
+front/node_modules/
+front/.env.local
+front/.env.development.local
+front/.env.production.local
+front/.vercel/
+front/.turbo/
+
+# Ignore pour le back (Spring Boot)
+back/target/
+back/.idea/
+back/.vscode/
+back/*.iml
+back/mvnw
+back/mvnw.cmd
+back/.mvn/
+back/logs/
+back/tmp/
+back/src/main/resources/application-local.properties
