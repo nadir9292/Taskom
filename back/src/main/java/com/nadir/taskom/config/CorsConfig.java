@@ -10,8 +10,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3001")
-                .allowedOrigins("https://taskom-kappa.vercel.app")
+        .allowedOrigins("http://localhost:3001", "https://taskom-kappa.vercel.app")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
