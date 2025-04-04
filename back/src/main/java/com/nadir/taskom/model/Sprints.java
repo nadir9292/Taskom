@@ -27,7 +27,7 @@ public class Sprints {
   private String shortDescription;
   private String longDescription;
   private Date startDate;
-  private Date enDate;
+  private Date endDate;
   private List<String> listOfMembersId;
   private List<String> history;
   private String color;
