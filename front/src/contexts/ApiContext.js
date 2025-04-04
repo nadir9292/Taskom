@@ -6,9 +6,10 @@ const ApiRoutesContext = createContext()
 
 export const ApiRoutesProvider = ({ children }) => {
   const [routes, setRoutes] = useState([])
+  const NEXT_PUBLIC_API_URL = 'https://taskom-back-production.up.railway.app'
 
   useEffect(() => {
-    fetch(process.env.NEXT_PUBLIC_API_URL + '/get-scrumtabs')
+    fetch(NEXT_PUBLIC_API_URL + '/get-scrumtabs')
       .then((res) => res.json())
       .then(setRoutes)
       .catch(console.error)
