@@ -5,7 +5,7 @@ type Props = object
 
 const SprintCard = ({}: Props) => {
   return (
-    <div className="card my-4 px-2 py-1 bg-base-100 card-xs shadow-sm">
+    <div className="card my-4 px-2 py-1 bg-base-200 card-xs shadow-sm">
       <div className="card-body">
         <h2 className="badge badge-primary badge-sm">sprint tag</h2>
         <p>short description of sprint here</p>
