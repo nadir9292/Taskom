@@ -1,0 +1,16 @@
+# Global ignores
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+*.log
+
+.next/
+out/
+node_modules/
+.env.local
+.env
+.env.development.local
+.env.production.local
+.vercel/
+.turbo/

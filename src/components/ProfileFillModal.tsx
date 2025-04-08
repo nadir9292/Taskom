@@ -1,0 +1,97 @@
+import { UserType } from '@/src/types/UserType'
+import axios from 'axios'
+import React, { FormEvent, useState, useEffect } from 'react'
+
+type Props = { userCheck?: UserType }
+
+const ProfileFillModal = ({ userCheck }: Props) => {
+  const [firstname, setFirstname] = useState('')
+  const [lastname, setLastname] = useState('')
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true)
+
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const formData = new FormData(event.currentTarget)
+
+    const body = Object.fromEntries(formData.entries())
+    if (userCheck?.email) {
+      body.email = userCheck.email
+    }
+
+    const res = await axios.post(`/api/update-profile`, body)
+
+    if (res.status === 200) {
+      const modal = document.getElementById('profileFill') as HTMLDialogElement
+      if (modal) {
+        modal.close()
+      }
+    }
+  }
+
+  useEffect(() => {
+    const handleInputChange = () => {
+      if (firstname.length >= 2 && lastname.length >= 2) {
+        setIsButtonDisabled(false)
+      } else {
+        setIsButtonDisabled(true)
+      }
+    }
+
+    handleInputChange()
+  }, [firstname, lastname])
+
+  return (
+    <dialog id="profileFill" className="modal">
+      <div className="modal-box">
+        <h3 className="font-bold text-primary text-xl text-center">
+          Please complete your profile
+        </h3>
+
+        <div className="modal-action">
+          <form
+            method="dialog"
+            className="grid grid-cols-1 w-full"
+            onSubmit={onSubmit}
+          >
+            <input
+              name="email"
+              type="text"
+              className="input my-2 w-full"
+              value={userCheck?.email ? userCheck.email : ''}
+              disabled
+            />
+            <input
+              name="firstname"
+              type="text"
+              placeholder="Firstname"
+              className="input my-2 w-full"
+              value={firstname}
+              onChange={(e) => {
+                setFirstname(e.target.value)
+              }}
+            />
+            <input
+              name="lastname"
+              type="text"
+              placeholder="LastName"
+              className="input my-2 w-full"
+              value={lastname}
+              onChange={(e) => {
+                setLastname(e.target.value)
+              }}
+            />
+            <button
+              className="btn mt-4 btn-primary"
+              disabled={isButtonDisabled}
+            >
+              Validate
+            </button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+  )
+}
+
+export default ProfileFillModal
