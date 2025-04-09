@@ -11,9 +11,13 @@ const handler = NextAuth({
   ],
   callbacks: {
     async signIn({ user }) {
+      console.log('user : ', user)
       const { error } = await supabase
         .from('User')
-        .insert([{ email: user.email }])
+        .insert([{
+          email: user.email,
+          profileimage: user.image
+         }])
 
       if (error && error.code !== '23505') {
         console.error(error)
