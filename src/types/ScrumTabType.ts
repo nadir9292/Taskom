@@ -1,6 +1,5 @@
 export type ScrumTabType = {
-  id: number
+  idscrumtab: number
   title?: string
-  listOfScrumStepId?: Array<string>
   color?: string
 }

@@ -4,6 +4,7 @@ import './globals.css'
 import NavBar from '@/src/components/NavBar'
 import { ApiRoutesProvider } from '@/src/contexts/ApiContext'
 import SessionWrapper from '@/src/components/auth/SessionWrapper'
+import { AuroraBackground } from '@/src/components/ui/aurora-background'
 
 const RootLayout = ({
   children,
@@ -15,8 +16,10 @@ const RootLayout = ({
       <body>
         <SessionWrapper>
           <ApiRoutesProvider>
-            <NavBar />
-            {children}
+            <AuroraBackground>
+              <NavBar />
+              {children}
+            </AuroraBackground>
           </ApiRoutesProvider>
         </SessionWrapper>
       </body>

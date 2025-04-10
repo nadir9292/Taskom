@@ -4,6 +4,7 @@ import Index from '@/src/components/Index'
 import ProfileFillModal from '@/src/components/ProfileFillModal'
 import { useEffect, useState } from 'react'
 import { useApiRoutes } from '@/src/contexts/ApiContext'
+import CreateTeamModal from '@/src/components/CreateTeamModal'
 
 const Home = () => {
   const { user } = useApiRoutes()
@@ -29,6 +30,7 @@ const Home = () => {
   return (
     <>
       <Index />
+      <CreateTeamModal />
       <ProfileFillModal userCheck={user!} />
     </>
   )
