@@ -6,7 +6,7 @@ import React from 'react'
 type Props = object
 const LoginButton = ({}: Props) => {
   return (
-    <>
+    <div className="grid grid-cols-1 max-w-sm md:max-w-xl mx-auto">
       <button
         onClick={() => signIn('github')}
         className="btn btn-lg shadow-2xl mb-4 rounded-4xl bg-black text-white border-black"
@@ -58,7 +58,7 @@ const LoginButton = ({}: Props) => {
         </svg>
         Login with Google
       </button>
-    </>
+    </div>
   )
 }
 

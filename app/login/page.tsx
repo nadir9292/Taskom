@@ -5,9 +5,12 @@ type Props = object
 
 const Login = ({}: Props) => {
   return (
-    <div className="grid grid-cols-1 mx-auto max-w-xs md:max-w-xl bg-[#F5F5F5] py-8 px-3 mt-24 rounded-2xl shadow-2xl">
-      <h1 className="text-center text-2xl md:text-4xl mb-12">
-        Bienvenue sur Task organization manager
+    <div className="relative w-[90vw] mx-auto">
+      <h1 className="text-center text-xl md:text-2xl py-2 px-1 mb-4">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint non
+        blanditiis aut? Quia consequatur eligendi doloribus praesentium in,
+        temporibus repellendus, maxime sit sint delectus sunt. Fuga repellat
+        nihil quos saepe.
       </h1>
       <LoginButton />
     </div>
