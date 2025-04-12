@@ -16,7 +16,6 @@ const handler = NextAuth({
   ],
   callbacks: {
     async signIn({ user }) {
-      console.log('user : ', user)
       const { error } = await supabase
         .from('User')
         .insert([{
