@@ -9,12 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@eidellev/react-tag-input": "^1.1.0",
     "@heroicons/react": "^2.2.0",
     "@supabase/supabase-js": "^2.49.4",
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "framer-motion": "^12.6.3",
+    "framer-motion": "^12.6.5",
     "lucide-react": "^0.487.0",
     "motion": "^12.6.3",
     "next": "15.2.4",

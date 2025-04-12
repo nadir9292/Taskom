@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Happy+Monkey&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -12,6 +13,8 @@ body {
   padding: 0;
   margin: 0;
   overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300; /* Appliquer le poids 300 */
 }
 
 @theme inline {
@@ -159,4 +162,20 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.tag-input {
+  @apply w-full bg-white rounded-lg border border-gray-300  focus-within:border-purple-500 focus-within:ring-2 focus-within:ring-purple-200 text-xs outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out text-white;
+}
+
+.tag-input .tag {
+  @apply px-2 py-1 rounded-md mr-2;
+}
+
+.tag-input .tag .remove-tag-button {
+  @apply ml-2;
+}
+
+.tag-input .new-tag {
+  @apply focus:border-0 focus:outline-none text-gray-700;
 }

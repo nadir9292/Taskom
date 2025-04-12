@@ -30,7 +30,7 @@ const Home = () => {
   return (
     <>
       <Index />
-      <CreateTeamModal />
+      <CreateTeamModal user={user!} />
       <ProfileFillModal userCheck={user!} />
     </>
   )
