@@ -9,6 +9,7 @@ import CreateTeamModal from '@/src/components/CreateTeamModal'
 const Home = () => {
   const { user } = useApiRoutes()
   const [isModalVisible, setIsModalVisible] = useState(false)
+  console.log(user)
 
   useEffect(() => {
     if (user && user.firstname !== undefined) {

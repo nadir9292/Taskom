@@ -90,7 +90,9 @@ const NavBar = () => {
         <div className="fixed bottom-6 w-[95vw] mx-auto left-0 right-0">
           <BackgroundGradient className="dock dock-lg rounded-[20px] bg-[#F5F5F5] border border-[#F5F5F5]">
             <button
-              className={`${pathname === '/my-team' ? 'dock-active' : ''}`}
+              className={`${
+                pathname === '/my-team' ? 'bg-[#e8e6e6] scale-90' : ''
+              }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -98,7 +100,7 @@ const NavBar = () => {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="size-6"
+                className="size-10"
               >
                 <path
                   strokeLinecap="round"
@@ -108,14 +110,16 @@ const NavBar = () => {
               </svg>
               <span className="dock-label">My team</span>
             </button>
-            <button className={`${pathname === '/' ? 'dock-active' : ''}`}>
+            <button
+              className={`${pathname === '/' ? 'bg-[#e8e6e6] scale-90' : ''}`}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="size-6"
+                className="size-10"
               >
                 <path
                   strokeLinecap="round"
@@ -126,23 +130,44 @@ const NavBar = () => {
 
               <span className="dock-label">Home</span>
             </button>
-            <button
-              className={` ${pathname === '/my-profile' ? 'dock-active' : ''}`}
-            >
-              <Image
-                src={
-                  session.user?.image
-                    ? session.user.image
-                    : '/default-profile.png'
-                }
-                height={24}
-                width={24}
-                className="rounded-full"
-                alt="image profile"
-              />
-              <span className="dock-label">
-                {session.user?.name ? session.user.name.split(' ')[0] : ''}
-              </span>
+            <button className="relative">
+              <div className="dropdown dropdown-top dropdown-end">
+                <div
+                  tabIndex={0}
+                  className="flex flex-col items-center justify-center w-16"
+                >
+                  <Image
+                    src={
+                      session.user?.image
+                        ? session.user.image
+                        : '/default-profile.png'
+                    }
+                    height={40}
+                    width={40}
+                    className="rounded-full"
+                    alt="image profile"
+                  />
+                  <span className="dock-label">
+                    {session.user?.name ? session.user.name.split(' ')[0] : ''}
+                  </span>
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40 z-50"
+                >
+                  <li>
+                    <p>My profile</p>
+                  </li>
+                  <li>
+                    <p
+                      onClick={() => signOut()}
+                      className="font-bold text-error"
+                    >
+                      Logout
+                    </p>
+                  </li>
+                </ul>
+              </div>
             </button>
           </BackgroundGradient>
         </div>
