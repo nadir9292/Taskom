@@ -5,7 +5,7 @@ import { useApiRoutes } from '@/src/contexts/ApiContext'
 import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const NavBar = () => {
@@ -14,6 +14,7 @@ const NavBar = () => {
   const { user } = useApiRoutes()
   const { data: session, status } = useSession()
   const pathname = usePathname()
+  const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
@@ -60,7 +61,7 @@ const NavBar = () => {
                           width={40}
                           alt="profile image"
                           priority
-                          className="ml-2 rounded-full"
+                          className="ml-2 rounded-xl"
                         />
                       </div>
                       <ul
@@ -90,7 +91,8 @@ const NavBar = () => {
         <div className="fixed bottom-6 w-[95vw] mx-auto left-0 right-0">
           <BackgroundGradient className="dock dock-lg rounded-[20px] bg-[#F5F5F5] border border-[#F5F5F5]">
             <button
-              className={`${
+              onClick={() => router.push('/my-team')}
+              className={`dock-item ${
                 pathname === '/my-team' ? 'bg-[#e8e6e6] scale-90' : ''
               }`}
             >
@@ -110,8 +112,12 @@ const NavBar = () => {
               </svg>
               <span className="dock-label">My team</span>
             </button>
+
             <button
-              className={`${pathname === '/' ? 'bg-[#e8e6e6] scale-90' : ''}`}
+              onClick={() => router.push('/')}
+              className={`dock-item ${
+                pathname === '/' ? 'bg-[#e8e6e6] scale-90' : ''
+              }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -127,24 +133,20 @@ const NavBar = () => {
                   d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
                 />
               </svg>
-
               <span className="dock-label">Home</span>
             </button>
-            <button className="relative">
+
+            <button className="relative dock-item">
               <div className="dropdown dropdown-top dropdown-end">
                 <div
                   tabIndex={0}
                   className="flex flex-col items-center justify-center w-16"
                 >
                   <Image
-                    src={
-                      session.user?.image
-                        ? session.user.image
-                        : '/default-profile.png'
-                    }
+                    src={session.user?.image || '/default-profile.png'}
                     height={40}
                     width={40}
-                    className="rounded-full"
+                    className="rounded-xl"
                     alt="image profile"
                   />
                   <span className="dock-label">

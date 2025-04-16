@@ -4,12 +4,10 @@ import Index from '@/src/components/Index'
 import ProfileFillModal from '@/src/components/ProfileFillModal'
 import { useEffect, useState } from 'react'
 import { useApiRoutes } from '@/src/contexts/ApiContext'
-import CreateTeamModal from '@/src/components/CreateTeamModal'
 
 const Home = () => {
   const { user } = useApiRoutes()
   const [isModalVisible, setIsModalVisible] = useState(false)
-  console.log(user)
 
   useEffect(() => {
     if (user && user.firstname !== undefined) {
@@ -30,8 +28,12 @@ const Home = () => {
 
   return (
     <>
-      <Index />
-      <CreateTeamModal user={user!} />
+      {user && user.idteam ? (
+        <Index />
+      ) : (
+        <div className="text-center">you are alone...</div>
+      )}
+
       <ProfileFillModal userCheck={user!} />
     </>
   )
