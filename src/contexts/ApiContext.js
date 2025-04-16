@@ -9,14 +9,15 @@ export const ApiRoutesProvider = ({ children }) => {
   const { data: session, status } = useSession()
   const [user, setUser] = useState({})
   const [scrumtabs, setScrumtabs] = useState([])
+  const [myTeam, setMyTeam] = useState([])
 
   useEffect(() => {
     if (!session || status !== 'authenticated') return
 
-    const fetchData = async () => {
+    const fetchUserAndScrumtabs = async () => {
       try {
         const [userRes, scrumtabRes] = await Promise.all([
-          fetch(`api/get-user?email=${session.user.email}`),
+          fetch(`/api/get-user?email=${session.user.email}`),
           fetch('/api/get-scrumtabs'),
         ])
 
@@ -25,16 +26,24 @@ export const ApiRoutesProvider = ({ children }) => {
 
         setUser(userData)
         setScrumtabs(scrumtabData)
+
+        if (userData.idteam) {
+          const teamRes = await fetch(
+            `/api/get-my-team?idteam=${userData.idteam}`
+          )
+          const teamData = await teamRes.json()
+          setMyTeam(teamData)
+        }
       } catch (error) {
         console.error(error)
       }
     }
 
-    fetchData()
+    fetchUserAndScrumtabs()
   }, [session, status])
 
   return (
-    <ApiRoutesContext.Provider value={{ user, scrumtabs }}>
+    <ApiRoutesContext.Provider value={{ user, scrumtabs, myTeam }}>
       {children}
     </ApiRoutesContext.Provider>
   )

@@ -6,9 +6,13 @@ type Props = { myTeam: UserType[] }
 
 const TeamList = ({ myTeam }: Props) => {
   return (
-    <div className="min-h-screen p-4">
-      <h1 className="text-center mt-6 text-3xl font-bold">Your team</h1>
-      <ul className="mt-10 rounded-2xl list">
+    <div className="mx-auto w-[95vw] md:w-[70vw]">
+      <ul className="mt-10 py-2 rounded-[22px] list max-h-[650px] overflow-auto shadow-lg bg-white/60 backdrop-blur-lg">
+        <li className="list-row p-4 pb-2 text-xs opacity-60 tracking-wide">
+          <p className="font-bold">Your team</p>
+          <p></p>
+          <h1 className="italic">sprint counter</h1>
+        </li>
         {myTeam?.map((teammate, index) => (
           <li className="list-row" key={index}>
             <div>
@@ -19,7 +23,7 @@ const TeamList = ({ myTeam }: Props) => {
                 quality={70}
                 priority
                 alt="profile image team"
-                className="shadow-xl rounded-xl object-cover"
+                className="shadow-xl rounded-[22px] object-cover"
               />
             </div>
             <div>
@@ -28,7 +32,7 @@ const TeamList = ({ myTeam }: Props) => {
                 <span className="uppercase">{teammate.lastname}</span>
               </div>
               <div className="text-xs uppercase font-semibold opacity-60">
-                Developper
+                {teammate.job}
               </div>
             </div>
             <div

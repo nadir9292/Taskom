@@ -12,6 +12,7 @@ export async function POST(req: NextRequest) {
       .update({
         lastname: data.lastname,
         firstname: data.firstname,
+        job: data.job,
       })
       .eq('email', data.email)
 

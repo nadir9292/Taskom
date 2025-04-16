@@ -4,15 +4,41 @@ import React, { FormEvent, useState, useEffect } from 'react'
 
 type Props = { userCheck?: UserType }
 
+const jobList = [
+  'Frontend Developer',
+  'Backend Developer',
+  'Full Stack Developer',
+  'DevOps Engineer',
+  'Software Engineer',
+  'QA Tester',
+  'UI/UX Designer',
+  'Product Manager',
+  'Project Manager',
+  'Scrum Master',
+  'Data Analyst',
+  'Data Scientist',
+  'Mobile Developer',
+  'Tech Lead',
+  'CTO',
+  'Cloud Engineer',
+  'System Administrator',
+  'Security Engineer',
+  'Business Analyst',
+  'IT Support Specialist',
+]
+
 const ProfileFillModal = ({ userCheck }: Props) => {
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
+  const [job, setJob] = useState('')
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     const formData = new FormData(event.currentTarget)
+
+    console.log(formData)
 
     const body = Object.fromEntries(formData.entries())
     if (userCheck?.email) {
@@ -30,8 +56,9 @@ const ProfileFillModal = ({ userCheck }: Props) => {
   }
 
   useEffect(() => {
+    console.log(job)
     const handleInputChange = () => {
-      if (firstname.length >= 2 && lastname.length >= 2) {
+      if (firstname.length >= 2 && lastname.length >= 2 && job.length >= 1) {
         setIsButtonDisabled(false)
       } else {
         setIsButtonDisabled(true)
@@ -39,7 +66,7 @@ const ProfileFillModal = ({ userCheck }: Props) => {
     }
 
     handleInputChange()
-  }, [firstname, lastname])
+  }, [firstname, lastname, job])
 
   return (
     <dialog id="profileFill" className="modal">
@@ -57,7 +84,7 @@ const ProfileFillModal = ({ userCheck }: Props) => {
             <input
               name="email"
               type="text"
-              className="input my-2 w-full"
+              className="input my-2 w-full italic"
               value={userCheck?.email ? userCheck.email : ''}
               disabled
             />
@@ -65,7 +92,7 @@ const ProfileFillModal = ({ userCheck }: Props) => {
               name="firstname"
               type="text"
               placeholder="Firstname"
-              className="input my-2 w-full"
+              className="input border border-gray-900 my-2 w-full"
               value={firstname}
               onChange={(e) => {
                 setFirstname(e.target.value)
@@ -75,12 +102,27 @@ const ProfileFillModal = ({ userCheck }: Props) => {
               name="lastname"
               type="text"
               placeholder="LastName"
-              className="input my-2 w-full"
+              className="input border border-gray-900 my-2 w-full"
               value={lastname}
               onChange={(e) => {
                 setLastname(e.target.value)
               }}
             />
+            <select
+              name="job"
+              defaultValue="Select your job"
+              className="select border border-gray-900 w-full my-2"
+              onChange={(e) => {
+                setJob(e.target.value)
+              }}
+            >
+              <option disabled={true}>Pick a color</option>
+              {jobList.map((job, index) => (
+                <option key={index} value={job}>
+                  {job}
+                </option>
+              ))}
+            </select>
             <button
               className="btn mt-4 btn-primary"
               disabled={isButtonDisabled}

@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   try {
     const { data } = await supabase
       .from('User')
-      .select('iduser, firstname, lastname, profileimage')
+      .select('iduser, firstname, lastname, profileimage, job')
       .eq('idteam', idteam)
 
     return NextResponse.json(data, { status: 200 })

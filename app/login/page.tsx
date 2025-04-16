@@ -7,7 +7,6 @@ type Props = object
 const Login = ({}: Props) => {
   return (
     <div className="relative w-[90vw] mx-auto">
-      <div className="text-zinc-50">I</div>
       <LoginTypeWritterEffect />
       <LoginButton />
     </div>

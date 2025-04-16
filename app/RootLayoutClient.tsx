@@ -1,12 +1,11 @@
-/* eslint-disable @next/next/no-page-custom-font */
 'use client'
 
 import './globals.css'
 import NavBar from '@/src/components/NavBar'
 import { ApiRoutesProvider } from '@/src/contexts/ApiContext'
 import SessionWrapper from '@/src/components/auth/SessionWrapper'
-import { AuroraBackground } from '@/src/components/ui/aurora-background'
-import Head from 'next/head'
+import VantaBackground from '@/src/components/ui/VantaBackground'
+import Loading from '@/src/components/Loading'
 
 const RootLayoutClient = ({
   children,
@@ -15,18 +14,13 @@ const RootLayoutClient = ({
 }>) => {
   return (
     <html lang="en">
-      <Head>
-        <link rel="manifest" href="/manifest.ts" />
-        <link rel="icon" href="/icon-192x192.png" />
-        <meta name="theme-color" content="#fafafa" />
-      </Head>
-      <body>
+      <body className="relative min-h-screen overflow-hidden">
         <SessionWrapper>
           <ApiRoutesProvider>
-            <AuroraBackground>
-              <NavBar />
-              {children}
-            </AuroraBackground>
+            <Loading />
+            <VantaBackground />
+            <NavBar />
+            {children}
           </ApiRoutesProvider>
         </SessionWrapper>
       </body>
