@@ -7,7 +7,7 @@ type Props = { myTeam: UserType[] }
 const TeamList = ({ myTeam }: Props) => {
   return (
     <div className="mx-auto w-[95vw] md:w-[70vw]">
-      <ul className="mt-10 py-2 rounded-[22px] list max-h-[650px] overflow-auto shadow-lg bg-white/60 backdrop-blur-lg">
+      <ul className="mt-10 py-2 rounded-[22px] list max-h-[650px] overflow-auto shadow-lg bg-white/50 backdrop-blur-lg">
         <li className="list-row p-4 pb-2 text-xs opacity-60 tracking-wide">
           <p className="font-bold">Your team</p>
           <p></p>

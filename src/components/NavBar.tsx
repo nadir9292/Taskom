@@ -33,7 +33,7 @@ const NavBar = () => {
     <>
       {windowWidth >= 600 ? (
         <>
-          <div className=" w-[95vw] mt-4 mx-auto navbar rounded-[22px] dark:bg-[#0e1111] shadow-lg bg-white/60 backdrop-blur-lg">
+          <div className=" w-[95vw] mx-auto navbar rounded-[22px] mt-4 shadow-lg bg-white/50 backdrop-blur-lg">
             <div className="flex-1">
               <Link href="/" className="btn btn-ghost text-xl">
                 Taskom
@@ -59,12 +59,12 @@ const NavBar = () => {
                         width={40}
                         alt="profile image"
                         priority
-                        className="ml-2 rounded-xl"
+                        className="rounded-[22px]"
                       />
                     </div>
                     <ul
                       tabIndex={0}
-                      className="dropdown-content menu bg-[#F5F5F5] rounded-box z-1 w-52 p-2 shadow-xl"
+                      className="dropdown-content menu bg-white/80 backdrop-blur-lg rounded-[22px] w-52 p-2 shadow-xl"
                     >
                       <li>
                         <button className="font-bold">My profile</button>
@@ -85,7 +85,7 @@ const NavBar = () => {
           </div>
         </>
       ) : (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[95vw] px-4 py-2 flex justify-between gap-6 bg-white/60 backdrop-blur-lg rounded-[22px] shadow-lg">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95vw] p-2 flex justify-between gap-6 bg-white/50 backdrop-blur-lg rounded-[22px] shadow-lg">
           {[
             { path: '/my-team', icon: UsersIcon, label: 'My team' },
             { path: '/', icon: HomeIcon, label: 'Home' },
@@ -94,7 +94,7 @@ const NavBar = () => {
               key={path}
               onClick={() => router.push(path)}
               className={`flex flex-col items-center justify-center w-28 h-16 rounded-[22px] transition-all ${
-                pathname === path ? 'bg-[#e8e6e6]' : ''
+                pathname === path ? 'bg-[#ebe2e28d]' : ''
               }`}
             >
               <Icon className="w-7 h-7 text-gray-700" />

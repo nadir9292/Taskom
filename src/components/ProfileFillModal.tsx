@@ -38,8 +38,6 @@ const ProfileFillModal = ({ userCheck }: Props) => {
 
     const formData = new FormData(event.currentTarget)
 
-    console.log(formData)
-
     const body = Object.fromEntries(formData.entries())
     if (userCheck?.email) {
       body.email = userCheck.email
@@ -56,7 +54,6 @@ const ProfileFillModal = ({ userCheck }: Props) => {
   }
 
   useEffect(() => {
-    console.log(job)
     const handleInputChange = () => {
       if (firstname.length >= 2 && lastname.length >= 2 && job.length >= 1) {
         setIsButtonDisabled(false)
