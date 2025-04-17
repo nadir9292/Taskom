@@ -1,7 +1,7 @@
 'use client'
 
 import Index from '@/src/components/Index'
-import ProfileFillModal from '@/src/components/ProfileFillModal'
+import ProfileFillModal from '@/src/components/modal/ProfileFillModal'
 import { useEffect, useState } from 'react'
 import { useApiRoutes } from '@/src/contexts/ApiContext'
 
@@ -29,12 +29,12 @@ const Home = () => {
   return (
     <>
       {user && user.idteam ? (
-        <Index />
+        <Index user={user} />
       ) : (
         <div className="text-center">you are alone...</div>
       )}
 
-      <ProfileFillModal userCheck={user!} />
+      {user && <ProfileFillModal userCheck={user} />}
     </>
   )
 }

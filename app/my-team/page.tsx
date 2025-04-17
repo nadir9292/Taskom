@@ -1,6 +1,6 @@
 'use client'
 
-import CreateTeamModal from '@/src/components/CreateTeamModal'
+import CreateTeamModal from '@/src/components/modal/CreateTeamModal'
 import TeamList from '@/src/components/TeamList'
 import { useApiRoutes } from '@/src/contexts/ApiContext'
 import React from 'react'
@@ -11,11 +11,15 @@ const Page = () => {
   return (
     <div>
       {user && user.idteam ? (
-        <TeamList myTeam={myTeam!} />
+        myTeam ? (
+          <TeamList myTeam={myTeam} />
+        ) : (
+          <div>Loading team...</div>
+        )
+      ) : user ? (
+        <CreateTeamModal user={user} />
       ) : (
-        <div>
-          <CreateTeamModal user={user!} />
-        </div>
+        <div>Loading user...</div>
       )}
     </div>
   )

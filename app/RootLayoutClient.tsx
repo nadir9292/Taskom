@@ -4,7 +4,7 @@ import './globals.css'
 import NavBar from '@/src/components/NavBar'
 import { ApiRoutesProvider } from '@/src/contexts/ApiContext'
 import SessionWrapper from '@/src/components/auth/SessionWrapper'
-import Loading from '@/src/components/Loading'
+import Loading from '@/src/components/utils/Loading'
 
 const RootLayoutClient = ({
   children,

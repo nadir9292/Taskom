@@ -51,7 +51,7 @@ const NavBar = () => {
                     >
                       <Image
                         src={
-                          user.profileimage
+                          user?.profileimage
                             ? user.profileimage
                             : '/default-profile.png'
                         }

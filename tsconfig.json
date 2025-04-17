@@ -29,7 +29,7 @@
     "**/*.js",
     ".next/types/**/*.ts",
     "postcss.config.mjs",
-    "src/contexts/ApiContext.js",
+    "src/contexts/ApiContext.tsx",
     "app/api/auth/[...nextauth]"
   ],
   "exclude": ["node_modules"]

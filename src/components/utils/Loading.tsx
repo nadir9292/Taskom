@@ -9,7 +9,7 @@ const Loading = ({}: Props) => {
   const pathname = usePathname()
   const { user } = useApiRoutes()
 
-  if (Object.keys(user).length > 0 || pathname === '/login') return
+  if (Object.keys(user!).length > 0 || pathname === '/login') return
 
   return (
     <div

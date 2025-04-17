@@ -26,12 +26,7 @@ const LoginTypeWritterEffect = () => {
   return (
     <>
       <div className="flex flex-col items-center justify-center mt-24">
-        <p
-          className="text-5xl font-medium"
-          style={{ fontFamily: 'Montserrat' }}
-        >
-          Taskom
-        </p>
+        <p className="text-5xl font-medium">Taskom</p>
         <TypewriterEffectSmooth words={words} />
       </div>
     </>

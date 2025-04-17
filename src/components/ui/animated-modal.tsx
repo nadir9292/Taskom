@@ -50,7 +50,7 @@ export const ModalTrigger = ({
   return (
     <button
       className={cn(
-        'px-4 py-2 rounded-md text-black dark:text-white text-center relative overflow-hidden',
+        'btn btn-secondary shadow-md rounded-[22px] text-center relative overflow-hidden',
         className
       )}
       onClick={() => setOpen(true)}
@@ -103,7 +103,7 @@ export const ModalBody = ({
           <motion.div
             ref={modalRef}
             className={cn(
-              'min-h-[50%] max-h-[90%] md:max-w-[40%] bg-white dark:bg-neutral-950 md:rounded-2xl relative z-50 flex flex-col flex-1 overflow-hidden',
+              'min-h-[50%] max-h-[90%] md:max-w-[40%] bg-white/80 backdrop-blur-lg md:rounded-2xl relative z-50 flex flex-col flex-1 overflow-hidden',
               className
             )}
             initial={{
@@ -190,15 +190,15 @@ const CloseIcon = () => {
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
+        width="28"
+        height="28"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="text-black dark:text-white h-4 w-4 group-hover:scale-125 group-hover:rotate-3 transition duration-200"
+        className="text-black h-4 w-4 group-hover:scale-125 group-hover:rotate-3 transition duration-200"
       >
         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
         <path d="M18 6l-12 12" />
