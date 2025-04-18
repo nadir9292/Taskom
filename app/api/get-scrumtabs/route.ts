@@ -31,7 +31,27 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    return NextResponse.json({ scrumtabs, scrumsteps }, { status: 200 })
+    const sprints = []
+    for (const step of scrumsteps) {
+      const { data: stepSprints, error: sprintError } = await supabase
+        .from('sprint')
+        .select('*')
+        .eq('idscrumstep', step.idscrumstep)
+
+      if (sprintError) {
+        return NextResponse.json(
+          { error: 'Failed to fetch sprints' },
+          { status: 500 }
+        )
+      }
+
+      sprints.push(...(stepSprints || []))
+    }
+
+    return NextResponse.json(
+      { scrumtabs, scrumsteps, sprints },
+      { status: 200 }
+    )
   } catch (err) {
     console.error('Server error:', err)
     return NextResponse.json(

@@ -49,20 +49,19 @@ const CreateScrumTabModal = ({ user }: Props) => {
         </ModalTrigger>
         <ModalBody className="rounded-2xl mx-4 md:mx-1">
           <ModalContent>
-            <h1 className="text-center text-2xl mt-2 font-bold">
-              New Scrum tab.
+            <h1 className="text-center text-2xl mt-2 font-medium text-gray-900">
+              New Scrum tab
             </h1>
             <form className="mt-6" onSubmit={createScrumTab}>
               <input
                 type="text"
                 required
                 placeholder="Title"
-                className="input border mb-4 w-full rounded-[22px]"
+                className="input border mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg"
                 value={scrumTabName}
                 onChange={handleScrumTabNameChange}
               />
               <div>
-                <p className="text-center my-2">Scrum steps</p>
                 <TagInput
                   value={scrumSteps}
                   onChange={handleScrumStepChange}
@@ -70,7 +69,7 @@ const CreateScrumTabModal = ({ user }: Props) => {
                 />
               </div>
               <button
-                className="btn btn-secondary relative z-10 mt-12 w-full shadow-sm"
+                className="btn btn-secondary btn-lg relative z-10 mt-4 w-full shadow-sm"
                 disabled={!scrumTabName || scrumTabName.length <= 2}
               >
                 Create new scrum tab

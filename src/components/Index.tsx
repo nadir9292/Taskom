@@ -57,7 +57,11 @@ const Index = ({ user }: Props) => {
         </div>
       </div>
       {selectedTab && (
-        <ScrumTab scrumtab={selectedTab} scrumSteps={selectedSteps!} />
+        <ScrumTab
+          scrumtab={selectedTab}
+          scrumSteps={selectedSteps!}
+          sprints={scrumtabs.sprints!}
+        />
       )}
     </div>
   )

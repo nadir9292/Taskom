@@ -2,6 +2,7 @@
 
 import { ScrumStepType } from '@/src/types/ScrumStepType'
 import { ScrumTabType } from '@/src/types/ScrumTabType'
+import { SprintType } from '@/src/types/SprintType'
 import { UserType } from '@/src/types/UserType'
 import { useSession } from 'next-auth/react'
 import {
@@ -17,6 +18,7 @@ type ApiRoutesContextType = {
   scrumtabs: {
     scrumtabs: ScrumTabType[]
     scrumsteps: ScrumStepType[]
+    sprints: SprintType[]
   }
   myTeam: UserType[]
 }
@@ -35,7 +37,8 @@ export const ApiRoutesProvider = ({ children }: ApiRoutesProviderProps) => {
   const [scrumtabs, setScrumtabs] = useState<{
     scrumtabs: ScrumTabType[]
     scrumsteps: ScrumStepType[]
-  }>({ scrumtabs: [], scrumsteps: [] })
+    sprints: SprintType[]
+  }>({ scrumtabs: [], scrumsteps: [], sprints: [] })
   const [myTeam, setMyTeam] = useState<UserType[]>([])
 
   useEffect(() => {
@@ -61,6 +64,7 @@ export const ApiRoutesProvider = ({ children }: ApiRoutesProviderProps) => {
           const scrumtabData: {
             scrumtabs: ScrumTabType[]
             scrumsteps: ScrumStepType[]
+            sprints: SprintType[]
           } = await scrumtabRes.json()
 
           setMyTeam(teamData)
