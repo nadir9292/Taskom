@@ -22,7 +22,8 @@ export async function POST(req: NextRequest) {
     data.scrumsteps.forEach(async (element: any) => {
       await supabase.from('scrumstep').insert({
         idscrumtab: teamData.idscrumtab,
-        title: element,
+        title: element.stepName,
+        order: element.order,
         color: '#F5F5F5',
         idteam: data.idteam,
       })

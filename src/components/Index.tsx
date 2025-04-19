@@ -61,6 +61,7 @@ const Index = ({ user }: Props) => {
           scrumtab={selectedTab}
           scrumSteps={selectedSteps!}
           sprints={scrumtabs.sprints!}
+          iduser={user.iduser!}
         />
       )}
     </div>

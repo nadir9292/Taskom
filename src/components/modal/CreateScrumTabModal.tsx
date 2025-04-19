@@ -11,14 +11,16 @@ import TagInput from '@eidellev/react-tag-input'
 
 type Props = { user: UserType }
 
+type scrumStepForm = { order: number; stepName: string }
+
 const CreateScrumTabModal = ({ user }: Props) => {
   const [scrumTabName, setScrumTabName] = useState('')
-  const [scrumSteps, setScrumStep] = useState<string[]>([
-    'backlog',
-    'to do',
-    'doing',
-    'test',
-    'done',
+  const [scrumSteps, setScrumStep] = useState<scrumStepForm[]>([
+    { order: 1, stepName: 'backlog' },
+    { order: 2, stepName: 'to do' },
+    { order: 3, stepName: 'doing' },
+    { order: 4, stepName: 'test' },
+    { order: 5, stepName: 'done' },
   ])
 
   const handleScrumTabNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +28,11 @@ const CreateScrumTabModal = ({ user }: Props) => {
   }
 
   const handleScrumStepChange = (newTags: string[]) => {
-    setScrumStep(newTags)
+    const updatedSteps: scrumStepForm[] = newTags.map((step, index) => ({
+      order: index + 1,
+      stepName: step,
+    }))
+    setScrumStep(updatedSteps)
   }
 
   const createScrumTab = async (event: FormEvent<HTMLFormElement>) => {
@@ -63,7 +69,7 @@ const CreateScrumTabModal = ({ user }: Props) => {
               />
               <div>
                 <TagInput
-                  value={scrumSteps}
+                  value={scrumSteps.map((s) => s.stepName)}
                   onChange={handleScrumStepChange}
                   colorize
                 />

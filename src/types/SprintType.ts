@@ -7,6 +7,6 @@ export type SprintType = {
   enddate?: Date
   longdescription?: string
   history?: string
-  idscrumstep?: number
-  iduseraffected?: number
+  idscrumstep?: number | null
+  iduseraffected?: number | null
 }

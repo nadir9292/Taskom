@@ -17,8 +17,6 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (insertError) throw insertError
-    console.log(teamData.idteam)
-    console.log(data)
 
     await supabase
       .from('User')

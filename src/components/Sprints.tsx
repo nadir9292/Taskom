@@ -3,9 +3,13 @@ import { PencilSquareIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
-type Props = { sprints: SprintType[]; idscrumstep: number }
+type Props = {
+  sprints: SprintType[]
+  idscrumstep: number
+  openCreateModal: () => void
+}
 
-const Sprints = ({ sprints, idscrumstep }: Props) => {
+const Sprints = ({ sprints, idscrumstep, openCreateModal }: Props) => {
   const [selectedSprints, setSelectedSprints] = useState<SprintType[]>()
 
   useEffect(() => {
@@ -17,7 +21,9 @@ const Sprints = ({ sprints, idscrumstep }: Props) => {
   return (
     <>
       <div className="flex justify-center my-2 bg-white/70 backdrop-blur-lg rounded-[22px] shadow-sm p-3 max-h-12">
-        <button className="btn btn-secondary btn-xs">+ New sprint</button>
+        <button className="btn btn-secondary btn-xs" onClick={openCreateModal}>
+          + New sprint
+        </button>
       </div>
       {selectedSprints ? (
         selectedSprints.map((sprint) => (
