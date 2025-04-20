@@ -34,8 +34,8 @@ const Sprints = ({ sprints, idscrumstep, openCreateModal }: Props) => {
             <div className="flex items-center justify-between">
               <div className="badge badge-primary">{sprint.tag}</div>
               <PencilSquareIcon
-                height={22}
-                width={22}
+                height={20}
+                width={20}
                 className="md:opacity-0 md:group-hover:opacity-100 md:hover:scale-110 md:transition-opacity md:duration-200"
                 onClick={() => alert('display edit popup')}
               />
@@ -45,8 +45,8 @@ const Sprints = ({ sprints, idscrumstep, openCreateModal }: Props) => {
             </p>
             <Image
               src="/default-profile.png"
-              height={22}
-              width={22}
+              height={20}
+              width={20}
               alt="profile image sprint"
               className="absolute right-3 bottom-3"
             />

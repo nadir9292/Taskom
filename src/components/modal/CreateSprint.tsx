@@ -10,6 +10,11 @@ type Props = {
   closeCreateModal: () => void
 }
 
+type StatusType = {
+  message?: string | null
+  active: boolean
+}
+
 const tags = [
   'Front',
   'Back',
@@ -49,6 +54,15 @@ const CreateSprint = ({
     iduseraffected: null,
   })
   const [scrumstepsList, setScrumstepsList] = useState<ScrumStepType[]>([])
+  const [error, setError] = useState<StatusType>({
+    message: null,
+    active: false,
+  })
+  const [success, setSuccess] = useState<StatusType>({
+    message: null,
+    active: false,
+  })
+  const [isLoading, setIsloading] = useState<boolean>(false)
 
   useEffect(() => {
     setScrumstepsList([...scrumsteps].sort((a, b) => a.order - b.order))
@@ -70,6 +84,7 @@ const CreateSprint = ({
 
   const createSprint = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setIsloading(true)
 
     const sprintToSend = {
       ...sprintForm,
@@ -81,9 +96,18 @@ const CreateSprint = ({
       return
     }
     try {
-      await axios.post('/api/create-sprint', sprintForm)
+      await axios.post('/api/create-sprint', sprintForm).then(() => {
+        setSuccess({ message: 'Sprint has been created.', active: true })
+        setIsloading(false)
+        setTimeout(() => {
+          setSuccess({ message: null, active: false })
+          closeCreateModal()
+        }, 3000)
+      })
     } catch (error) {
-      console.error('Failed to create sprint', error)
+      setIsloading(false)
+      setError({ message: 'Failed to create sprint : ' + error, active: true })
+      setTimeout(() => setError({ message: null, active: false }), 5000)
     }
   }
 
@@ -189,10 +213,39 @@ const CreateSprint = ({
           </div>
 
           <button className="btn btn-secondary btn-lg mt-4 w-full shadow-md">
-            Create
+            {isLoading ? (
+              <span className="loading loading-dots loading-lg"></span>
+            ) : (
+              <span>Create</span>
+            )}
           </button>
         </form>
       </div>
+      {success.active || error.active ? (
+        <div
+          role="alert"
+          className={`alert ${
+            error.active ? 'alert-error' : 'alert-success'
+          } absolute inset-x-0 top-12 w-[90vw] max-w-xl mx-auto`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>{error.message || success.message}</span>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   )
 }

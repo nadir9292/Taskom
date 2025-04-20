@@ -67,8 +67,8 @@ const ProfileFillModal = ({ userCheck }: Props) => {
 
   return (
     <dialog id="profileFill" className="modal">
-      <div className="modal-box">
-        <h3 className="font-bold text-primary text-xl text-center">
+      <div className="modal-box bg-[#FDECEC]/90 rounded-[22px] shadow-lg border-transparent mb-56">
+        <h3 className="font-medium text-xl text-center">
           Please complete your profile
         </h3>
 
@@ -81,7 +81,7 @@ const ProfileFillModal = ({ userCheck }: Props) => {
             <input
               name="email"
               type="text"
-              className="input my-2 w-full italic"
+              className="input mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md italic"
               value={userCheck?.email ? userCheck.email : ''}
               disabled
             />
@@ -89,7 +89,7 @@ const ProfileFillModal = ({ userCheck }: Props) => {
               name="firstname"
               type="text"
               placeholder="Firstname"
-              className="input border border-gray-900 my-2 w-full"
+              className="input mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
               value={firstname}
               onChange={(e) => {
                 setFirstname(e.target.value)
@@ -99,7 +99,7 @@ const ProfileFillModal = ({ userCheck }: Props) => {
               name="lastname"
               type="text"
               placeholder="LastName"
-              className="input border border-gray-900 my-2 w-full"
+              className="input mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
               value={lastname}
               onChange={(e) => {
                 setLastname(e.target.value)
@@ -108,12 +108,12 @@ const ProfileFillModal = ({ userCheck }: Props) => {
             <select
               name="job"
               defaultValue="Select your job"
-              className="select border border-gray-900 w-full my-2"
+              className="select mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
               onChange={(e) => {
                 setJob(e.target.value)
               }}
             >
-              <option disabled={true}>Pick a color</option>
+              <option disabled={true}>Select your job</option>
               {jobList.map((job, index) => (
                 <option key={index} value={job}>
                   {job}
@@ -121,7 +121,7 @@ const ProfileFillModal = ({ userCheck }: Props) => {
               ))}
             </select>
             <button
-              className="btn mt-4 btn-primary"
+              className="btn btn-secondary btn-lg mt-4 w-full shadow-md"
               disabled={isButtonDisabled}
             >
               Validate

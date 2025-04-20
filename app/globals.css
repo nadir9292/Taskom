@@ -20,7 +20,7 @@ body {
 }
 
 .tag-input {
-  @apply w-full bg-white/50 backdrop-blur-lg rounded-[22px] border border-gray-300 outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out text-white text-sm;
+  @apply mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md leading-8 transition-colors duration-200 ease-in-out text-white text-sm p-2;
 }
 
 .tag-input .tag {

@@ -85,7 +85,7 @@ const NavBar = () => {
           </div>
         </>
       ) : (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95vw] p-2 flex justify-between gap-6 bg-white/50 backdrop-blur-lg rounded-[22px] shadow-lg">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95vw] p-2 flex justify-between gap-6 bg-white/50 backdrop-blur-lg rounded-[22px] shadow-lg z-10">
           {[
             { path: '/my-team', icon: UsersIcon, label: 'My team' },
             { path: '/', icon: HomeIcon, label: 'Home' },

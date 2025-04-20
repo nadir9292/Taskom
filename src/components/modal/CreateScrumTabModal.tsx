@@ -48,43 +48,41 @@ const CreateScrumTabModal = ({ user }: Props) => {
   }
 
   return (
-    <div className="flex items-center justify-center">
-      <Modal>
-        <ModalTrigger className="flex justify-center group/modal-btn">
-          <span className="text-center">New scrum tab</span>
-        </ModalTrigger>
-        <ModalBody className="rounded-2xl mx-4 md:mx-1">
-          <ModalContent>
-            <h1 className="text-center text-2xl mt-2 font-medium text-gray-900">
-              New Scrum tab
-            </h1>
-            <form className="mt-6" onSubmit={createScrumTab}>
-              <input
-                type="text"
-                required
-                placeholder="Title"
-                className="input border mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg"
-                value={scrumTabName}
-                onChange={handleScrumTabNameChange}
+    <Modal>
+      <ModalTrigger className="flex justify-center group/modal-btn">
+        <span className="text-center">New scrum tab</span>
+      </ModalTrigger>
+      <ModalBody className="rounded-2xl mx-auto">
+        <ModalContent>
+          <h1 className="text-center text-2xl font-medium text-gray-900">
+            New Scrum tab
+          </h1>
+          <form className="mt-6" onSubmit={createScrumTab}>
+            <input
+              type="text"
+              required
+              placeholder="Title"
+              className="input mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
+              value={scrumTabName}
+              onChange={handleScrumTabNameChange}
+            />
+            <div>
+              <TagInput
+                value={scrumSteps.map((s) => s.stepName)}
+                onChange={handleScrumStepChange}
+                colorize
               />
-              <div>
-                <TagInput
-                  value={scrumSteps.map((s) => s.stepName)}
-                  onChange={handleScrumStepChange}
-                  colorize
-                />
-              </div>
-              <button
-                className="btn btn-secondary btn-lg relative z-10 mt-4 w-full shadow-sm"
-                disabled={!scrumTabName || scrumTabName.length <= 2}
-              >
-                Create new scrum tab
-              </button>
-            </form>
-          </ModalContent>
-        </ModalBody>
-      </Modal>
-    </div>
+            </div>
+            <button
+              className="btn btn-secondary btn-lg mt-4 w-full shadow-md"
+              disabled={!scrumTabName || scrumTabName.length <= 2}
+            >
+              Create new scrum tab
+            </button>
+          </form>
+        </ModalContent>
+      </ModalBody>
+    </Modal>
   )
 }
 
