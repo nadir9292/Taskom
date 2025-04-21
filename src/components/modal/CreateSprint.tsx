@@ -1,18 +1,15 @@
 import React, { useEffect, useState, FormEvent } from 'react'
 import axios from 'axios'
+import SnackBar from '@/src/components/utils/SnackBar'
 import { SprintType } from '@/src/types/SprintType'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
+import { SnackBarStatus } from '@/src/types/SnackBarStatus'
 
 type Props = {
   idUser: number
   scrumsteps: ScrumStepType[]
   isOpen: boolean
   closeCreateModal: () => void
-}
-
-type StatusType = {
-  message?: string | null
-  active: boolean
 }
 
 const tags = [
@@ -32,7 +29,7 @@ const tags = [
   'DevOps',
   'Review',
   'Hotfix',
-  'WIP', // Work In Progress
+  'WIP',
   'Done',
   'Blocked',
 ]
@@ -53,19 +50,19 @@ const CreateSprint = ({
     idscrumstep: null,
     iduseraffected: null,
   })
-  const [scrumstepsList, setScrumstepsList] = useState<ScrumStepType[]>([])
-  const [error, setError] = useState<StatusType>({
-    message: null,
-    active: false,
+
+  const [sortedSteps, setSortedSteps] = useState<ScrumStepType[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [snackBar, setSnackBar] = useState<{
+    error: SnackBarStatus
+    success: SnackBarStatus
+  }>({
+    error: { active: false, message: null },
+    success: { active: false, message: null },
   })
-  const [success, setSuccess] = useState<StatusType>({
-    message: null,
-    active: false,
-  })
-  const [isLoading, setIsloading] = useState<boolean>(false)
 
   useEffect(() => {
-    setScrumstepsList([...scrumsteps].sort((a, b) => a.order - b.order))
+    setSortedSteps([...scrumsteps].sort((a, b) => a.order - b.order))
   }, [scrumsteps])
 
   const handleChange = (
@@ -82,40 +79,55 @@ const CreateSprint = ({
     setSprintForm((prev) => ({ ...prev, [name]: new Date(value) }))
   }
 
-  const createSprint = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setIsloading(true)
-
-    const sprintToSend = {
-      ...sprintForm,
-      iduseraffected: idUser,
-    }
-
-    if (!sprintToSend.idscrumstep || !sprintToSend.iduseraffected) {
-      console.error('Missing required fields')
-      return
-    }
-    try {
-      await axios.post('/api/create-sprint', sprintForm).then(() => {
-        setSuccess({ message: 'Sprint has been created.', active: true })
-        setIsloading(false)
-        setTimeout(() => {
-          setSuccess({ message: null, active: false })
-          closeCreateModal()
-        }, 3000)
+  const resetSnackBar = () => {
+    setTimeout(() => {
+      setSnackBar({
+        error: { active: false, message: null },
+        success: { active: false, message: null },
       })
-    } catch (error) {
-      setIsloading(false)
-      setError({ message: 'Failed to create sprint : ' + error, active: true })
-      setTimeout(() => setError({ message: null, active: false }), 5000)
+      closeCreateModal()
+    }, 3000)
+  }
+
+  const createSprint = async (event: FormEvent) => {
+    event.preventDefault()
+
+    if (!sprintForm.idscrumstep) return
+
+    setIsLoading(true)
+
+    try {
+      await axios.post('/api/create-sprint', {
+        ...sprintForm,
+        iduseraffected: idUser,
+      })
+
+      setSnackBar((prev) => ({
+        ...prev,
+        success: { message: 'Sprint created.', active: true },
+      }))
+      resetSnackBar()
+    } catch {
+      setSnackBar((prev) => ({
+        ...prev,
+        error: { message: 'Failed to create sprint.', active: true },
+      }))
+      setTimeout(() => {
+        setSnackBar((prev) => ({
+          ...prev,
+          error: { message: null, active: false },
+        }))
+      }, 5000)
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  if (!isOpen) return
+  if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 h-full w-full backdrop-blur-xl [perspective:800px] [transform-style:preserve-3d]">
-      <div className="p-4 max-w-md w-[95vw] mx-auto mt-32 bg-[#FDECEC]/90 backdrop-blur-xl rounded-[22px] shadow-lg relative z-50 flex flex-col">
+    <div className="fixed inset-0 h-full w-full backdrop-blur-xl z-50">
+      <div className="p-4 max-w-md w-[95vw] mx-auto mt-32 bg-[#FDECEC]/90 backdrop-blur-xl rounded-[22px] shadow-lg relative flex flex-col">
         <button
           className="btn btn-ghost absolute top-4 right-2"
           onClick={closeCreateModal}
@@ -137,7 +149,7 @@ const CreateSprint = ({
             <option value="" disabled>
               Select step
             </option>
-            {scrumstepsList.map((step) => (
+            {sortedSteps.map((step) => (
               <option key={step.idscrumstep} value={step.idscrumstep}>
                 {step.order} : {step.title}
               </option>
@@ -145,10 +157,10 @@ const CreateSprint = ({
           </select>
 
           <input
-            type="text"
             name="title"
-            placeholder="Title"
+            type="text"
             required
+            placeholder="Title"
             className="input mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
             value={sprintForm.title}
             onChange={handleChange}
@@ -164,8 +176,8 @@ const CreateSprint = ({
             <option value="" disabled>
               Select tag
             </option>
-            {tags.map((tag, index) => (
-              <option key={index} value={tag}>
+            {tags.map((tag, i) => (
+              <option key={i} value={tag}>
                 {tag}
               </option>
             ))}
@@ -190,62 +202,35 @@ const CreateSprint = ({
           />
 
           <div className="flex gap-4">
-            <div className="flex flex-col w-full">
-              <label className="mb-1 px-2">Start date</label>
-              <input
-                type="date"
-                name="startdate"
-                className="input input-md w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-                value={sprintForm?.startdate?.toISOString().split('T')[0]}
-                onChange={handleDateChange}
-              />
-            </div>
-            <div className="flex flex-col w-full">
-              <label className="mb-1 px-2">End date</label>
-              <input
-                type="date"
-                name="enddate"
-                className="input input-md w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-                value={sprintForm?.enddate?.toISOString().split('T')[0]}
-                onChange={handleDateChange}
-              />
-            </div>
+            {['startdate', 'enddate'].map((field) => (
+              <div key={field} className="flex flex-col w-full">
+                <label className="mb-1 px-2">
+                  {field === 'startdate' ? 'Start' : 'End'} date
+                </label>
+                <input
+                  type="date"
+                  name={field}
+                  className="input input-md w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
+                  value={
+                    (sprintForm as any)[field]?.toISOString().split('T')[0]
+                  }
+                  onChange={handleDateChange}
+                />
+              </div>
+            ))}
           </div>
 
           <button className="btn btn-secondary btn-lg mt-4 w-full shadow-md">
             {isLoading ? (
               <span className="loading loading-dots loading-lg"></span>
             ) : (
-              <span>Create</span>
+              <span>Add new sprint</span>
             )}
           </button>
         </form>
       </div>
-      {success.active || error.active ? (
-        <div
-          role="alert"
-          className={`alert ${
-            error.active ? 'alert-error' : 'alert-success'
-          } absolute inset-x-0 top-12 w-[90vw] max-w-xl mx-auto`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 shrink-0 stroke-current"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>{error.message || success.message}</span>
-        </div>
-      ) : (
-        <></>
-      )}
+
+      <SnackBar error={snackBar.error} success={snackBar.success} />
     </div>
   )
 }

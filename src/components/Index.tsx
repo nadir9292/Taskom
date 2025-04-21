@@ -17,6 +17,8 @@ const Index = ({ user }: Props) => {
   const [selectedTab, setSelectedTab] = useState<ScrumTabType | undefined>()
   const [selectedSteps, setSelectedSteps] = useState<ScrumStepType[]>()
   const [isOpenDisclosure, setIsOpenDisclosure] = useState<boolean>(true)
+  const [isOpenModalCreateScrumtab, setIsOpenModalCreateScrumtab] =
+    useState<boolean>(false)
 
   useEffect(() => {
     if (!selectedTabId || !scrumtabs?.scrumtabs) return
@@ -39,77 +41,89 @@ const Index = ({ user }: Props) => {
   }
 
   return (
-    <div className="grid grid-cols-1 mx-auto">
-      <button
-        onClick={() => setIsOpenDisclosure((prev) => !prev)}
-        className="flex items-center mx-auto italic text-sm my-2"
-      >
-        <span>{!isOpenDisclosure ? 'Open filter ' : ''}</span>
-        <ChevronDownIcon
-          className={`w-5 transition-transform ${
-            isOpenDisclosure ? 'rotate-180' : ''
-          }`}
-        />
-      </button>
-      {isOpenDisclosure ? (
-        <div className="mx-auto">
-          <div className="flex items-center gap-2 mb-2">
-            <select
-              onChange={handleSelectChange}
-              value={selectedTabId ?? ''}
-              className="select bg-white/50 backdrop-blur-lg border-transparent shadow-lg rounded-[22px]"
-            >
-              <option value="" disabled>
-                Select Scrum tab
-              </option>
-              {scrumtabs?.scrumtabs.map((tab) => (
-                <option key={tab.idscrumtab} value={tab.idscrumtab}>
-                  {tab.title}
+    <>
+      <div className="grid grid-cols-1 mx-auto">
+        <button
+          onClick={() => setIsOpenDisclosure((prev) => !prev)}
+          className="flex items-center mx-auto italic text-sm my-2"
+        >
+          <span>{!isOpenDisclosure ? 'Open filter ' : ''}</span>
+          <ChevronDownIcon
+            className={`w-5 transition-transform ${
+              isOpenDisclosure ? 'rotate-180' : ''
+            }`}
+          />
+        </button>
+        {isOpenDisclosure ? (
+          <div className="mx-auto">
+            <div className="flex items-center gap-2 mb-2">
+              <select
+                onChange={handleSelectChange}
+                value={selectedTabId ?? ''}
+                className="select bg-white/50 backdrop-blur-lg border-transparent shadow-lg rounded-[22px]"
+              >
+                <option value="" disabled>
+                  Select Scrum tab
                 </option>
-              ))}
-            </select>
-            <div className="min-w-[150px]">
-              <CreateScrumTabModal user={user} />
+                {scrumtabs?.scrumtabs.map((tab) => (
+                  <option key={tab.idscrumtab} value={tab.idscrumtab}>
+                    {tab.title}
+                  </option>
+                ))}
+              </select>
+              <div className="min-w-[150px]">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setIsOpenModalCreateScrumtab(true)}
+                >
+                  New scrum tab
+                </button>
+              </div>
+            </div>
+            <div className="flex justify-center filter items-center">
+              <input
+                className="btn filter-reset btn-sm"
+                type="radio"
+                name="metaframeworks"
+                aria-label="All"
+              />
+              <input
+                className="btn btn-sm"
+                type="radio"
+                name="metaframeworks"
+                aria-label="Front"
+              />
+              <input
+                className="btn btn-sm"
+                type="radio"
+                name="metaframeworks"
+                aria-label="Back"
+              />
+              <input
+                className="btn btn-sm"
+                type="radio"
+                name="metaframeworks"
+                aria-label="Bug"
+              />
             </div>
           </div>
-          <div className="flex justify-center filter items-center">
-            <input
-              className="btn filter-reset btn-sm"
-              type="radio"
-              name="metaframeworks"
-              aria-label="All"
-            />
-            <input
-              className="btn btn-sm"
-              type="radio"
-              name="metaframeworks"
-              aria-label="Front"
-            />
-            <input
-              className="btn btn-sm"
-              type="radio"
-              name="metaframeworks"
-              aria-label="Back"
-            />
-            <input
-              className="btn btn-sm"
-              type="radio"
-              name="metaframeworks"
-              aria-label="Bug"
-            />
-          </div>
-        </div>
-      ) : (
-        <></>
-      )}
-      {selectedTab && (
-        <ScrumTab
-          scrumSteps={selectedSteps!}
-          sprints={scrumtabs.sprints!}
-          iduser={user.iduser!}
-        />
-      )}
-    </div>
+        ) : (
+          <></>
+        )}
+        {selectedTab && (
+          <ScrumTab
+            scrumSteps={selectedSteps!}
+            sprints={scrumtabs.sprints!}
+            iduser={user.iduser!}
+          />
+        )}
+      </div>
+      <CreateScrumTabModal
+        user={user}
+        closeCreateModal={() => setIsOpenModalCreateScrumtab(false)}
+        isOpen={isOpenModalCreateScrumtab}
+      />
+    </>
   )
 }
 

@@ -1,9 +1,14 @@
 'use client'
 
+import ConfirmDelete from '@/src/components/modal/ConfirmDelete'
 import CreateSprint from '@/src/components/modal/CreateSprint'
 import Sprints from '@/src/components/Sprints'
+import SnackBar from '@/src/components/utils/SnackBar'
+import { useSelectContext } from '@/src/contexts/SelectedContext'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
+import { SnackBarStatus } from '@/src/types/SnackBarStatus'
 import { SprintType } from '@/src/types/SprintType'
+import axios from 'axios'
 import React, { useState } from 'react'
 
 type Props = {
@@ -13,8 +18,50 @@ type Props = {
 }
 
 const ScrumTab = ({ scrumSteps, sprints, iduser }: Props) => {
+  const { sprintSelected } = useSelectContext()
   const [isOpenModalCreateSprint, setIsOpenModalCreateSprint] =
     useState<boolean>(false)
+  const [openConfirmeMessage, setOpenConfirmeMessage] = useState<boolean>(false)
+  const [snackBar, setSnackBar] = useState<{
+    error: SnackBarStatus
+    success: SnackBarStatus
+  }>({
+    error: { active: false, message: null },
+    success: { active: false, message: null },
+  })
+
+  const resetSnackBar = () => {
+    setTimeout(() => {
+      setSnackBar({
+        error: { active: false, message: null },
+        success: { active: false, message: null },
+      })
+    }, 3000)
+  }
+
+  const deleteSprint = async () => {
+    try {
+      await axios.delete('/api/delete-sprint', {
+        data: {
+          iduser: iduser,
+          sprintid: sprintSelected?.idsprint,
+        },
+      })
+
+      setSnackBar((prev) => ({
+        ...prev,
+        success: { message: 'Sprint deleted.', active: true },
+      }))
+      resetSnackBar()
+    } catch (error) {
+      setSnackBar((prev) => ({
+        ...prev,
+        error: { message: 'Failed to delete sprint.', active: true },
+      }))
+      resetSnackBar()
+      console.error('Erreur lors de la suppression du sprint', error)
+    }
+  }
 
   return (
     <>
@@ -37,6 +84,7 @@ const ScrumTab = ({ scrumSteps, sprints, iduser }: Props) => {
                 sprints={sprints}
                 idscrumstep={step.idscrumstep}
                 openCreateModal={() => setIsOpenModalCreateSprint(true)}
+                openConfirmDeleteSprint={() => setOpenConfirmeMessage(true)}
               />
             </div>
           ))}
@@ -47,6 +95,12 @@ const ScrumTab = ({ scrumSteps, sprints, iduser }: Props) => {
         isOpen={isOpenModalCreateSprint}
         closeCreateModal={() => setIsOpenModalCreateSprint(false)}
       />
+      <ConfirmDelete
+        isOpen={openConfirmeMessage}
+        closeCreateModal={() => setOpenConfirmeMessage(false)}
+        confirmDeletion={() => deleteSprint()}
+      />
+      <SnackBar error={snackBar.error} success={snackBar.success} />
     </>
   )
 }

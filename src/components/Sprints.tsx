@@ -1,5 +1,6 @@
+import { useSelectContext } from '@/src/contexts/SelectedContext'
 import { SprintType } from '@/src/types/SprintType'
-import { PencilSquareIcon } from '@heroicons/react/24/outline'
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
@@ -7,10 +8,17 @@ type Props = {
   sprints: SprintType[]
   idscrumstep: number
   openCreateModal: () => void
+  openConfirmDeleteSprint: () => void
 }
 
-const Sprints = ({ sprints, idscrumstep, openCreateModal }: Props) => {
+const Sprints = ({
+  sprints,
+  idscrumstep,
+  openCreateModal,
+  openConfirmDeleteSprint,
+}: Props) => {
   const [selectedSprints, setSelectedSprints] = useState<SprintType[]>()
+  const { setSprintSelected } = useSelectContext()
 
   useEffect(() => {
     setSelectedSprints(
@@ -29,16 +37,25 @@ const Sprints = ({ sprints, idscrumstep, openCreateModal }: Props) => {
         selectedSprints.map((sprint) => (
           <div
             key={sprint.idsprint}
+            onClick={() => setSprintSelected(sprint)}
             className="group my-2 bg-white/80 backdrop-blur-lg rounded-[22px] shadow-sm p-3 hover:scale-105 cursor-pointer"
           >
             <div className="flex items-center justify-between">
               <div className="badge badge-primary">{sprint.tag}</div>
-              <PencilSquareIcon
-                height={20}
-                width={20}
-                className="md:opacity-0 md:group-hover:opacity-100 md:hover:scale-110 md:transition-opacity md:duration-200"
-                onClick={() => alert('display edit popup')}
-              />
+              <div className="flex items-center">
+                <PencilSquareIcon
+                  height={16}
+                  width={16}
+                  className="mx-1 md:opacity-0 md:group-hover:opacity-100 md:hover:scale-110 md:transition-opacity md:duration-200"
+                  onClick={() => alert('display edit popup')}
+                />
+                <TrashIcon
+                  onClick={openConfirmDeleteSprint}
+                  height={16}
+                  width={16}
+                  className="text-red-500 md:opacity-0 md:group-hover:opacity-100 md:hover:scale-110 md:transition-opacity md:duration-200"
+                />
+              </div>
             </div>
             <p className="text-sm md:text-md my-2 text-pretty">
               {sprint.shortdescription}

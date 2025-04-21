@@ -1,88 +1,109 @@
 import React, { FormEvent, useState } from 'react'
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalTrigger,
-} from '@/src/components/ui/animated-modal'
 import axios from 'axios'
-import { UserType } from '@/src/types/UserType'
 import TagInput from '@eidellev/react-tag-input'
+import SnackBar from '@/src/components/utils/SnackBar'
+import { UserType } from '@/src/types/UserType'
+import { SnackBarStatus } from '@/src/types/SnackBarStatus'
 
-type Props = { user: UserType }
+type Props = {
+  user: UserType
+  closeCreateModal: () => void
+  isOpen: boolean
+}
 
-type scrumStepForm = { order: number; stepName: string }
+const defaultSteps = ['backlog', 'to do', 'doing', 'test', 'done']
 
-const CreateScrumTabModal = ({ user }: Props) => {
+const CreateScrumTabModal = ({ user, closeCreateModal, isOpen }: Props) => {
   const [scrumTabName, setScrumTabName] = useState('')
-  const [scrumSteps, setScrumStep] = useState<scrumStepForm[]>([
-    { order: 1, stepName: 'backlog' },
-    { order: 2, stepName: 'to do' },
-    { order: 3, stepName: 'doing' },
-    { order: 4, stepName: 'test' },
-    { order: 5, stepName: 'done' },
-  ])
+  const [scrumSteps, setScrumSteps] = useState(defaultSteps)
+  const [isLoading, setIsLoading] = useState(false)
+  const [snackBar, setSnackBar] = useState<{
+    error: SnackBarStatus
+    success: SnackBarStatus
+  }>({
+    error: { active: false, message: null },
+    success: { active: false, message: null },
+  })
 
-  const handleScrumTabNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setScrumTabName(e.target.value)
+  const handleStepChange = (newTags: string[]) => {
+    setScrumSteps(newTags)
   }
 
-  const handleScrumStepChange = (newTags: string[]) => {
-    const updatedSteps: scrumStepForm[] = newTags.map((step, index) => ({
-      order: index + 1,
-      stepName: step,
-    }))
-    setScrumStep(updatedSteps)
+  const resetSnackBar = () => {
+    setTimeout(() => {
+      setSnackBar({
+        error: { active: false, message: null },
+        success: { active: false, message: null },
+      })
+      closeCreateModal()
+    }, 3000)
   }
 
-  const createScrumTab = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const createScrumTab = async (e: FormEvent) => {
+    e.preventDefault()
+    if (scrumTabName.length <= 2) return
 
-    if (!scrumTabName || scrumTabName.length <= 2) return
+    setIsLoading(true)
+    try {
+      await axios.post('/api/create-scrumtab', {
+        idteam: user.idteam,
+        title: scrumTabName,
+        scrumsteps: scrumSteps.map((step, i) => ({
+          stepName: step,
+          order: i + 1,
+        })),
+      })
 
-    await axios.post(`/api/create-scrumtab`, {
-      idteam: user.idteam,
-      title: scrumTabName,
-      scrumsteps: scrumSteps,
-    })
+      setSnackBar((prev) => ({
+        ...prev,
+        success: { active: true, message: 'Success.' },
+      }))
+    } catch {
+      setSnackBar((prev) => ({
+        ...prev,
+        error: { active: true, message: 'Error.' },
+      }))
+    } finally {
+      setIsLoading(false)
+      resetSnackBar()
+    }
   }
+
+  if (!isOpen) return null
 
   return (
-    <Modal>
-      <ModalTrigger className="flex justify-center group/modal-btn">
-        <span className="text-center">New scrum tab</span>
-      </ModalTrigger>
-      <ModalBody className="rounded-2xl mx-auto">
-        <ModalContent>
-          <h1 className="text-center text-2xl font-medium text-gray-900">
-            New Scrum tab
-          </h1>
-          <form className="mt-6" onSubmit={createScrumTab}>
-            <input
-              type="text"
-              required
-              placeholder="Title"
-              className="input mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-              value={scrumTabName}
-              onChange={handleScrumTabNameChange}
-            />
-            <div>
-              <TagInput
-                value={scrumSteps.map((s) => s.stepName)}
-                onChange={handleScrumStepChange}
-                colorize
-              />
-            </div>
-            <button
-              className="btn btn-secondary btn-lg mt-4 w-full shadow-md"
-              disabled={!scrumTabName || scrumTabName.length <= 2}
-            >
-              Create new scrum tab
-            </button>
-          </form>
-        </ModalContent>
-      </ModalBody>
-    </Modal>
+    <div className="fixed inset-0 h-full w-full backdrop-blur-xl z-50">
+      <div className="p-4 max-w-md w-[95vw] mx-auto mt-32 bg-[#FDECEC]/90 backdrop-blur-xl rounded-[22px] shadow-lg relative flex flex-col">
+        <button
+          className="btn btn-ghost absolute top-4 right-2"
+          onClick={closeCreateModal}
+        >
+          X
+        </button>
+        <h1 className="text-center text-2xl mt-2 font-medium text-gray-900">
+          New Sprint
+        </h1>
+        <form className="mt-6" onSubmit={createScrumTab}>
+          <input
+            type="text"
+            required
+            placeholder="Title"
+            className="input mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
+            value={scrumTabName}
+            onChange={(e) => setScrumTabName(e.target.value)}
+          />
+          <TagInput value={scrumSteps} onChange={handleStepChange} colorize />
+          <button className="btn btn-secondary btn-lg mt-4 w-full shadow-md">
+            {isLoading ? (
+              <span className="loading loading-dots loading-lg"></span>
+            ) : (
+              'New tab'
+            )}
+          </button>
+        </form>
+      </div>
+      <SnackBar error={snackBar.error} success={snackBar.success} />
+    </div>
   )
 }
 
