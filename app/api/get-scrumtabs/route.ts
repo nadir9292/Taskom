@@ -14,15 +14,13 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const { data: scrumtabs, error: tabsError } = await supabase
-      .from('scrumtab')
-      .select('*')
-      .eq('idteam', idteam)
+    const [scrumtabResult, scrumstepResult] = await Promise.all([
+      supabase.from('scrumtab').select('*').eq('idteam', idteam),
+      supabase.from('scrumstep').select('*').eq('idteam', idteam),
+    ])
 
-    const { data: scrumsteps, error: stepsError } = await supabase
-      .from('scrumstep')
-      .select('*')
-      .eq('idteam', idteam)
+    const { data: scrumtabs, error: tabsError } = scrumtabResult
+    const { data: scrumsteps, error: stepsError } = scrumstepResult
 
     if (tabsError || stepsError) {
       return NextResponse.json(
@@ -31,21 +29,21 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    const sprints = []
-    for (const step of scrumsteps) {
-      const { data: stepSprints, error: sprintError } = await supabase
-        .from('sprint')
-        .select('*')
-        .eq('idscrumstep', step.idscrumstep)
+    const sprintFetches = scrumsteps.map((step) =>
+      supabase.from('sprint').select('*').eq('idscrumstep', step.idscrumstep)
+    )
 
-      if (sprintError) {
+    const sprintResults = await Promise.all(sprintFetches)
+
+    const sprints = []
+    for (const result of sprintResults) {
+      if (result.error) {
         return NextResponse.json(
           { error: 'Failed to fetch sprints' },
           { status: 500 }
         )
       }
-
-      sprints.push(...(stepSprints || []))
+      sprints.push(...(result.data || []))
     }
 
     return NextResponse.json(

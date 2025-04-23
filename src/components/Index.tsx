@@ -8,6 +8,8 @@ import { ScrumTabType } from '@/src/types/ScrumTabType'
 import { UserType } from '@/src/types/UserType'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import * as motion from 'motion/react-client'
+import { containerOnAppear } from '@/src/motion-tools/onAppear'
 
 type Props = { user: UserType }
 
@@ -42,82 +44,89 @@ const Index = ({ user }: Props) => {
 
   return (
     <>
-      <div className="grid grid-cols-1 mx-auto">
-        <button
-          onClick={() => setIsOpenDisclosure((prev) => !prev)}
-          className="flex items-center mx-auto italic text-sm my-2"
-        >
-          <span>{!isOpenDisclosure ? 'Open filter ' : ''}</span>
-          <ChevronDownIcon
-            className={`w-5 transition-transform ${
-              isOpenDisclosure ? 'rotate-180' : ''
-            }`}
-          />
-        </button>
-        {isOpenDisclosure ? (
-          <div className="mx-auto">
-            <div className="flex items-center gap-2 mb-2">
-              <select
-                onChange={handleSelectChange}
-                value={selectedTabId ?? ''}
-                className="select bg-white/50 backdrop-blur-lg border-transparent shadow-lg rounded-[22px]"
-              >
-                <option value="" disabled>
-                  Select Scrum tab
-                </option>
-                {scrumtabs?.scrumtabs.map((tab) => (
-                  <option key={tab.idscrumtab} value={tab.idscrumtab}>
-                    {tab.title}
-                  </option>
-                ))}
-              </select>
-              <div className="min-w-[150px]">
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => setIsOpenModalCreateScrumtab(true)}
+      <motion.div
+        variants={containerOnAppear}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
+        <div className="grid grid-cols-1 mx-auto">
+          <button
+            onClick={() => setIsOpenDisclosure((prev) => !prev)}
+            className="flex items-center mx-auto italic text-sm my-2"
+          >
+            <span>{!isOpenDisclosure ? 'Open filter ' : ''}</span>
+            <ChevronDownIcon
+              className={`w-5 transition-transform ${
+                isOpenDisclosure ? 'rotate-180' : ''
+              }`}
+            />
+          </button>
+          {isOpenDisclosure ? (
+            <div className="mx-auto">
+              <div className="flex items-center gap-2 mb-2">
+                <select
+                  onChange={handleSelectChange}
+                  value={selectedTabId ?? ''}
+                  className="select bg-white/50 border-transparent shadow-lg rounded-[22px]"
                 >
-                  New scrum tab
-                </button>
+                  <option value="" disabled>
+                    Select Scrum tab
+                  </option>
+                  {scrumtabs?.scrumtabs.map((tab) => (
+                    <option key={tab.idscrumtab} value={tab.idscrumtab}>
+                      {tab.title}
+                    </option>
+                  ))}
+                </select>
+                <div className="min-w-[150px]">
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => setIsOpenModalCreateScrumtab(true)}
+                  >
+                    New scrum tab
+                  </button>
+                </div>
+              </div>
+              <div className="flex justify-center filter items-center">
+                <input
+                  className="btn filter-reset btn-sm"
+                  type="radio"
+                  name="metaframeworks"
+                  aria-label="All"
+                />
+                <input
+                  className="btn btn-sm"
+                  type="radio"
+                  name="metaframeworks"
+                  aria-label="Front"
+                />
+                <input
+                  className="btn btn-sm"
+                  type="radio"
+                  name="metaframeworks"
+                  aria-label="Back"
+                />
+                <input
+                  className="btn btn-sm"
+                  type="radio"
+                  name="metaframeworks"
+                  aria-label="Bug"
+                />
               </div>
             </div>
-            <div className="flex justify-center filter items-center">
-              <input
-                className="btn filter-reset btn-sm"
-                type="radio"
-                name="metaframeworks"
-                aria-label="All"
-              />
-              <input
-                className="btn btn-sm"
-                type="radio"
-                name="metaframeworks"
-                aria-label="Front"
-              />
-              <input
-                className="btn btn-sm"
-                type="radio"
-                name="metaframeworks"
-                aria-label="Back"
-              />
-              <input
-                className="btn btn-sm"
-                type="radio"
-                name="metaframeworks"
-                aria-label="Bug"
-              />
-            </div>
-          </div>
-        ) : (
-          <></>
-        )}
-        {selectedTab && (
-          <ScrumTab
-            scrumSteps={selectedSteps!}
-            sprints={scrumtabs.sprints!}
-            iduser={user.iduser!}
-          />
-        )}
-      </div>
+          ) : (
+            <></>
+          )}
+          {selectedTab && (
+            <ScrumTab
+              scrumSteps={selectedSteps!}
+              sprints={scrumtabs.sprints!}
+              iduser={user.iduser!}
+            />
+          )}
+        </div>
+      </motion.div>
       <CreateScrumTabModal
         user={user}
         closeCreateModal={() => setIsOpenModalCreateScrumtab(false)}

@@ -4,6 +4,8 @@ import TagInput from '@eidellev/react-tag-input'
 import SnackBar from '@/src/components/utils/SnackBar'
 import { UserType } from '@/src/types/UserType'
 import { SnackBarStatus } from '@/src/types/SnackBarStatus'
+import { containerOnAppear } from '@/src/motion-tools/onAppear'
+import { motion, AnimatePresence } from 'framer-motion'
 
 type Props = {
   user: UserType
@@ -69,41 +71,54 @@ const CreateScrumTabModal = ({ user, closeCreateModal, isOpen }: Props) => {
     }
   }
 
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 h-full w-full backdrop-blur-xl z-50">
-      <div className="p-4 max-w-md w-[95vw] mx-auto mt-32 bg-[#FDECEC]/90 backdrop-blur-xl rounded-[22px] shadow-lg relative flex flex-col">
-        <button
-          className="btn btn-ghost absolute top-4 right-2"
-          onClick={closeCreateModal}
-        >
-          X
-        </button>
-        <h1 className="text-center text-2xl mt-2 font-medium text-gray-900">
-          New Sprint
-        </h1>
-        <form className="mt-6" onSubmit={createScrumTab}>
-          <input
-            type="text"
-            required
-            placeholder="Title"
-            className="input mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-            value={scrumTabName}
-            onChange={(e) => setScrumTabName(e.target.value)}
-          />
-          <TagInput value={scrumSteps} onChange={handleStepChange} colorize />
-          <button className="btn btn-secondary btn-lg mt-4 w-full shadow-md">
-            {isLoading ? (
-              <span className="loading loading-dots loading-lg"></span>
-            ) : (
-              'New tab'
-            )}
-          </button>
-        </form>
-      </div>
-      <SnackBar error={snackBar.error} success={snackBar.success} />
-    </div>
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 h-full w-full backdrop-blur-xl z-50">
+          <motion.div
+            variants={containerOnAppear}
+            initial="hidden"
+            animate="visible"
+            exit={{ opacity: 0, y: 20 }}
+          >
+            <div className="p-4 max-w-md w-[95vw] mx-auto mt-32 bg-[#FDECEC]/90 rounded-[22px] shadow-lg relative flex flex-col">
+              <button
+                className="btn btn-ghost absolute top-4 right-2"
+                onClick={closeCreateModal}
+              >
+                X
+              </button>
+              <h1 className="text-center text-2xl mt-2 font-medium text-gray-900">
+                New Sprint
+              </h1>
+              <form className="mt-6" onSubmit={createScrumTab}>
+                <input
+                  type="text"
+                  required
+                  placeholder="Title"
+                  className="input mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
+                  value={scrumTabName}
+                  onChange={(e) => setScrumTabName(e.target.value)}
+                />
+                <TagInput
+                  value={scrumSteps}
+                  onChange={handleStepChange}
+                  colorize
+                />
+                <button className="btn btn-secondary btn-lg mt-4 w-full shadow-md">
+                  {isLoading ? (
+                    <span className="loading loading-dots loading-lg"></span>
+                  ) : (
+                    'New tab'
+                  )}
+                </button>
+              </form>
+            </div>
+          </motion.div>
+          <SnackBar error={snackBar.error} success={snackBar.success} />
+        </div>
+      )}
+    </AnimatePresence>
   )
 }
 

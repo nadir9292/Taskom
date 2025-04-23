@@ -4,6 +4,7 @@ import SnackBar from '@/src/components/utils/SnackBar'
 import { SprintType } from '@/src/types/SprintType'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
 import { SnackBarStatus } from '@/src/types/SnackBarStatus'
+import { useApiRoutes } from '@/src/contexts/ApiContext'
 
 type Props = {
   idUser: number
@@ -40,6 +41,7 @@ const CreateSprint = ({
   isOpen,
   closeCreateModal,
 }: Props) => {
+  const { refreshData } = useApiRoutes()
   const [sprintForm, setSprintForm] = useState<SprintType>({
     tag: '',
     title: '',
@@ -50,7 +52,6 @@ const CreateSprint = ({
     idscrumstep: null,
     iduseraffected: null,
   })
-
   const [sortedSteps, setSortedSteps] = useState<ScrumStepType[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [snackBar, setSnackBar] = useState<{
@@ -102,6 +103,8 @@ const CreateSprint = ({
         iduseraffected: idUser,
       })
 
+      await refreshData()
+
       setSnackBar((prev) => ({
         ...prev,
         success: { message: 'Sprint created.', active: true },
@@ -117,7 +120,7 @@ const CreateSprint = ({
           ...prev,
           error: { message: null, active: false },
         }))
-      }, 5000)
+      }, 3000)
     } finally {
       setIsLoading(false)
     }

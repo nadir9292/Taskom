@@ -1,24 +1,40 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+
 @plugin "daisyui" {
   themes: pastel --default, pastel --prefersdark;
 }
 
+/* Styles globaux */
 html,
 body {
   height: 100%;
   margin: 0;
   padding: 0;
-  color: var(--foreground);
   overflow-x: hidden;
+  scroll-behavior: smooth;
   font-weight: 300;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
-  background-repeat: no-repeat;
+  color: var(--foreground);
   background-image: url('/bg-default.png');
+  background-repeat: no-repeat;
   background-size: cover;
 }
 
+/* Suppression des scrollbars */
+body,
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE & Edge */
+}
+
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Composants personnalisés */
 .tag-input {
   @apply mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md leading-8 transition-colors duration-200 ease-in-out text-white text-sm p-2;
 }

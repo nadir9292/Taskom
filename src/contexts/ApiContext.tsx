@@ -21,6 +21,7 @@ type ApiRoutesContextType = {
     sprints: SprintType[]
   }
   myTeam: UserType[]
+  refreshData: () => void
 }
 
 const ApiRoutesContext = createContext<ApiRoutesContextType | undefined>(
@@ -43,43 +44,72 @@ export const ApiRoutesProvider = ({ children }: ApiRoutesProviderProps) => {
 
   useEffect(() => {
     if (!session || status !== 'authenticated') return
+    let isMounted = true
 
-    const fetchUserAndScrumtabs = async () => {
+    const fetchAllData = async () => {
       try {
         const userRes = await fetch(
-          `/api/get-user?email=${session?.user?.email}`
+          `/api/get-user?email=${session.user?.email}`
         )
         const userData: UserType = await userRes.json()
+
+        if (!isMounted) return
         setUser(userData)
 
         if (userData?.idteam) {
-          const teamRes = await fetch(
-            `/api/get-my-team?idteam=${userData.idteam}`
-          )
-          const scrumtabRes = await fetch(
-            `/api/get-scrumtabs?idteam=${userData.idteam}`
-          )
+          const [teamRes, scrumtabRes] = await Promise.all([
+            fetch(`/api/get-my-team?idteam=${userData.idteam}`),
+            fetch(`/api/get-scrumtabs?idteam=${userData.idteam}`),
+          ])
 
-          const teamData: UserType[] = await teamRes.json()
-          const scrumtabData: {
-            scrumtabs: ScrumTabType[]
-            scrumsteps: ScrumStepType[]
-            sprints: SprintType[]
-          } = await scrumtabRes.json()
+          const [teamData, scrumtabData] = await Promise.all([
+            teamRes.json(),
+            scrumtabRes.json(),
+          ])
 
+          if (!isMounted) return
           setMyTeam(teamData)
           setScrumtabs(scrumtabData)
         }
       } catch (error) {
-        console.error(error)
+        console.error('fetchAllData error:', error)
       }
     }
 
-    fetchUserAndScrumtabs()
+    fetchAllData()
+
+    return () => {
+      isMounted = false
+    }
   }, [session, status])
 
+  const refreshData = async () => {
+    try {
+      if (!session) return
+      const userRes = await fetch(`/api/get-user?email=${session.user?.email}`)
+      const userData: UserType = await userRes.json()
+      setUser(userData)
+
+      if (userData?.idteam) {
+        const [teamRes, scrumtabRes] = await Promise.all([
+          fetch(`/api/get-my-team?idteam=${userData.idteam}`),
+          fetch(`/api/get-scrumtabs?idteam=${userData.idteam}`),
+        ])
+        const [teamData, scrumtabData] = await Promise.all([
+          teamRes.json(),
+          scrumtabRes.json(),
+        ])
+
+        setMyTeam(teamData)
+        setScrumtabs(scrumtabData)
+      }
+    } catch (err) {
+      console.error('refreshData error', err)
+    }
+  }
+
   return (
-    <ApiRoutesContext.Provider value={{ user, scrumtabs, myTeam }}>
+    <ApiRoutesContext.Provider value={{ user, scrumtabs, myTeam, refreshData }}>
       {children}
     </ApiRoutesContext.Provider>
   )

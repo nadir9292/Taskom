@@ -28,7 +28,7 @@ const Sprints = ({
 
   return (
     <>
-      <div className="flex justify-center my-2 bg-white/70 backdrop-blur-lg rounded-[22px] shadow-sm p-3 max-h-12">
+      <div className="flex justify-center my-2 bg-white/60 rounded-[22px] shadow-sm p-3 max-h-12 mt-2">
         <button className="btn btn-secondary btn-xs" onClick={openCreateModal}>
           + New sprint
         </button>
@@ -38,7 +38,7 @@ const Sprints = ({
           <div
             key={sprint.idsprint}
             onClick={() => setSprintSelected(sprint)}
-            className="group my-2 bg-white/80 backdrop-blur-lg rounded-[22px] shadow-sm p-3 hover:scale-105 cursor-pointer"
+            className="group my-2 bg-white/70 backdrop-blur-lg rounded-[22px] shadow-sm p-3 hover:scale-105 cursor-pointer"
           >
             <div className="flex items-center justify-between">
               <div className="badge badge-primary">{sprint.tag}</div>

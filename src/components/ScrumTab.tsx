@@ -4,6 +4,7 @@ import ConfirmDelete from '@/src/components/modal/ConfirmDelete'
 import CreateSprint from '@/src/components/modal/CreateSprint'
 import Sprints from '@/src/components/Sprints'
 import SnackBar from '@/src/components/utils/SnackBar'
+import { useApiRoutes } from '@/src/contexts/ApiContext'
 import { useSelectContext } from '@/src/contexts/SelectedContext'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
 import { SnackBarStatus } from '@/src/types/SnackBarStatus'
@@ -18,6 +19,7 @@ type Props = {
 }
 
 const ScrumTab = ({ scrumSteps, sprints, iduser }: Props) => {
+  const { refreshData } = useApiRoutes()
   const { sprintSelected } = useSelectContext()
   const [isOpenModalCreateSprint, setIsOpenModalCreateSprint] =
     useState<boolean>(false)
@@ -48,6 +50,8 @@ const ScrumTab = ({ scrumSteps, sprints, iduser }: Props) => {
         },
       })
 
+      await refreshData()
+
       setSnackBar((prev) => ({
         ...prev,
         success: { message: 'Sprint deleted.', active: true },
@@ -74,7 +78,7 @@ const ScrumTab = ({ scrumSteps, sprints, iduser }: Props) => {
           .map((step: ScrumStepType) => (
             <div
               key={step.idscrumstep}
-              className="grid grid-cols-1 h-fit carousel-item bg-white/60 backdrop-blur-lg rounded-[22px] shadow-sm p-4 w-56 max-h-[620px] md:max-h-[720px] overflow-y-auto"
+              className="grid grid-cols-1 h-fit carousel-item bg-white/60 rounded-[22px] shadow-sm p-4 w-[85vw] md:w-56 max-h-[620px] md:max-h-[720px] overflow-y-auto"
             >
               <div className="flex justify-between items-start w-full">
                 <p className="font-medium">{step.title}</p>
