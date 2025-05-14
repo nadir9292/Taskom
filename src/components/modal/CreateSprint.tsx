@@ -5,6 +5,7 @@ import { SprintType } from '@/src/types/SprintType'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
 import { SnackBarStatus } from '@/src/types/SnackBarStatus'
 import { useApiRoutes } from '@/src/contexts/ApiContext'
+import AnimatedModal from '@/src/components/utils/AnimatedModal'
 
 type Props = {
   idUser: number
@@ -14,6 +15,7 @@ type Props = {
 }
 
 const tags = [
+  'Fullstack',
   'Front',
   'Back',
   'Bug',
@@ -129,112 +131,108 @@ const CreateSprint = ({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 h-full w-full backdrop-blur-xl z-50">
-      <div className="p-4 max-w-md w-[95vw] mx-auto mt-32 bg-[#FDECEC]/90 backdrop-blur-xl rounded-[22px] shadow-lg relative flex flex-col">
-        <button
-          className="btn btn-ghost absolute top-4 right-2"
-          onClick={closeCreateModal}
+    <AnimatedModal isOpen={isOpen} onClose={closeCreateModal}>
+      <button
+        className="btn btn-ghost absolute top-4 right-2"
+        onClick={closeCreateModal}
+      >
+        X
+      </button>
+      <h1 className="text-center text-2xl mt-2 font-medium text-gray-900">
+        New Sprint
+      </h1>
+
+      <form className="mt-6" onSubmit={createSprint}>
+        <select
+          name="idscrumstep"
+          className="select mb-4 w-full rounded-[22px] bg-white/50 border-transparent shadow-md"
+          value={sprintForm.idscrumstep ?? ''}
+          onChange={handleChange}
+          required
         >
-          X
+          <option value="" disabled>
+            Select step
+          </option>
+          {sortedSteps.map((step) => (
+            <option key={step.idscrumstep} value={step.idscrumstep}>
+              {step.order} : {step.title}
+            </option>
+          ))}
+        </select>
+
+        <input
+          name="title"
+          type="text"
+          required
+          placeholder="Title"
+          className="input mb-4 w-full rounded-[22px] bg-white/50 border-transparent shadow-md"
+          value={sprintForm.title}
+          onChange={handleChange}
+        />
+
+        <select
+          name="tag"
+          value={sprintForm.tag}
+          onChange={handleChange}
+          required
+          className="select mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
+        >
+          <option value="" disabled>
+            Select tag
+          </option>
+          {tags.map((tag, i) => (
+            <option key={i} value={tag}>
+              {tag}
+            </option>
+          ))}
+        </select>
+
+        <textarea
+          name="shortdescription"
+          placeholder="Short description"
+          required
+          className="textarea mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
+          value={sprintForm.shortdescription}
+          onChange={handleChange}
+        />
+
+        <textarea
+          name="longdescription"
+          placeholder="Long description"
+          required
+          className="textarea mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
+          value={sprintForm.longdescription}
+          onChange={handleChange}
+        />
+
+        <div className="flex gap-4">
+          {['startdate', 'enddate'].map((field) => (
+            <div key={field} className="flex flex-col w-full">
+              <label className="mb-1 px-2">
+                {field === 'startdate' ? 'Start' : 'End'} date
+              </label>
+              <input
+                type="date"
+                name={field}
+                className="input input-md w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
+                value={(sprintForm as any)[field]?.toISOString().split('T')[0]}
+                onChange={handleDateChange}
+              />
+            </div>
+          ))}
+        </div>
+
+        <button className="btn btn-secondary btn-lg mt-4 w-full shadow-md">
+          {isLoading ? (
+            <span className="loading loading-dots loading-lg"></span>
+          ) : (
+            <span>Add new sprint</span>
+          )}
         </button>
-        <h1 className="text-center text-2xl mt-2 font-medium text-gray-900">
-          New Sprint
-        </h1>
-
-        <form className="mt-6" onSubmit={createSprint}>
-          <select
-            name="idscrumstep"
-            className="select mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-            value={sprintForm.idscrumstep ?? ''}
-            onChange={handleChange}
-            required
-          >
-            <option value="" disabled>
-              Select step
-            </option>
-            {sortedSteps.map((step) => (
-              <option key={step.idscrumstep} value={step.idscrumstep}>
-                {step.order} : {step.title}
-              </option>
-            ))}
-          </select>
-
-          <input
-            name="title"
-            type="text"
-            required
-            placeholder="Title"
-            className="input mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-            value={sprintForm.title}
-            onChange={handleChange}
-          />
-
-          <select
-            name="tag"
-            value={sprintForm.tag}
-            onChange={handleChange}
-            required
-            className="select mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-          >
-            <option value="" disabled>
-              Select tag
-            </option>
-            {tags.map((tag, i) => (
-              <option key={i} value={tag}>
-                {tag}
-              </option>
-            ))}
-          </select>
-
-          <textarea
-            name="shortdescription"
-            placeholder="Short description"
-            required
-            className="textarea mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-            value={sprintForm.shortdescription}
-            onChange={handleChange}
-          />
-
-          <textarea
-            name="longdescription"
-            placeholder="Long description"
-            required
-            className="textarea mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-            value={sprintForm.longdescription}
-            onChange={handleChange}
-          />
-
-          <div className="flex gap-4">
-            {['startdate', 'enddate'].map((field) => (
-              <div key={field} className="flex flex-col w-full">
-                <label className="mb-1 px-2">
-                  {field === 'startdate' ? 'Start' : 'End'} date
-                </label>
-                <input
-                  type="date"
-                  name={field}
-                  className="input input-md w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-                  value={
-                    (sprintForm as any)[field]?.toISOString().split('T')[0]
-                  }
-                  onChange={handleDateChange}
-                />
-              </div>
-            ))}
-          </div>
-
-          <button className="btn btn-secondary btn-lg mt-4 w-full shadow-md">
-            {isLoading ? (
-              <span className="loading loading-dots loading-lg"></span>
-            ) : (
-              <span>Add new sprint</span>
-            )}
-          </button>
-        </form>
-      </div>
+      </form>
 
       <SnackBar error={snackBar.error} success={snackBar.success} />
-    </div>
+    </AnimatedModal>
   )
 }
 

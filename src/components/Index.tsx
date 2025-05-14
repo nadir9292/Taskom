@@ -38,6 +38,12 @@ const Index = ({ user }: Props) => {
     setIsOpenDisclosure(false)
   }, [selectedTabId, scrumtabs?.scrumtabs, scrumtabs?.scrumsteps])
 
+  useEffect(() => {
+    if (scrumtabs.scrumtabs.length > 0) {
+      setSelectedTabId(scrumtabs.scrumtabs[0].idscrumtab)
+    }
+  }, [scrumtabs.scrumtabs])
+
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedTabId(Number(e.target.value))
   }
@@ -53,11 +59,11 @@ const Index = ({ user }: Props) => {
         <div className="grid grid-cols-1 mx-auto">
           <button
             onClick={() => setIsOpenDisclosure((prev) => !prev)}
-            className="flex items-center mx-auto italic text-sm my-2"
+            className="flex items-center mx-auto italic text-sm mt-4"
           >
-            <span>{!isOpenDisclosure ? 'Open filter ' : ''}</span>
+            <span>{!isOpenDisclosure ? 'Open menu ' : ''}</span>
             <ChevronDownIcon
-              className={`w-5 transition-transform ${
+              className={`w-5 transition-transform mx-2 ${
                 isOpenDisclosure ? 'rotate-180' : ''
               }`}
             />

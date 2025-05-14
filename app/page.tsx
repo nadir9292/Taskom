@@ -19,13 +19,6 @@ const Home = () => {
     }
   }, [user])
 
-  useEffect(() => {
-    const modal = document.getElementById('profileFill') as HTMLDialogElement
-    if (isModalVisible && modal) {
-      modal.showModal()
-    }
-  }, [isModalVisible])
-
   return (
     <>
       {user && user.idteam ? (
@@ -34,7 +27,13 @@ const Home = () => {
         <div className="text-center">you are alone...</div>
       )}
 
-      {user && <ProfileFillModal userCheck={user} />}
+      {user && (
+        <ProfileFillModal
+          userCheck={user}
+          isOpen={isModalVisible}
+          closeCreateModal={() => setIsModalVisible(false)}
+        />
+      )}
     </>
   )
 }
