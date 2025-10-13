@@ -1,6 +1,6 @@
 import { useSelectContext } from '@/src/contexts/SelectedContext'
 import { SprintType } from '@/src/types/SprintType'
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { TrashIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
@@ -18,7 +18,12 @@ const Sprints = ({
   openConfirmDeleteSprint,
 }: Props) => {
   const [selectedSprints, setSelectedSprints] = useState<SprintType[]>()
-  const { setSprintSelected } = useSelectContext()
+  const { setSprintSelected, setIsOpenSprintDetails } = useSelectContext()
+
+  const onSelectSprint = (sprint: SprintType) => {
+    setSprintSelected(sprint)
+    setIsOpenSprintDetails(true)
+  }
 
   useEffect(() => {
     setSelectedSprints(
@@ -37,18 +42,21 @@ const Sprints = ({
         selectedSprints.map((sprint) => (
           <div
             key={sprint.idsprint}
-            onClick={() => setSprintSelected(sprint)}
+            onClick={() => onSelectSprint(sprint)}
             className="group my-2 bg-white/70 backdrop-blur-lg rounded-[22px] shadow-sm p-3 hover:scale-105 cursor-pointer"
           >
             <div className="flex items-center justify-between">
-              <div className="badge badge-primary">{sprint.tag}</div>
-              <div className="flex items-center">
-                <PencilSquareIcon
-                  height={16}
-                  width={16}
-                  className="mx-1 md:opacity-0 md:group-hover:opacity-100 md:hover:scale-110 md:transition-opacity md:duration-200"
-                  onClick={() => alert('display edit popup')}
+              <div className="flex items-center gap-1">
+                <div className="badge badge-primary">{sprint.tag}</div>
+                <Image
+                  src="/default-profile.png"
+                  height={20}
+                  width={20}
+                  alt="profile image sprint"
+                  className=""
                 />
+              </div>
+              <div className="flex items-center">
                 <TrashIcon
                   onClick={openConfirmDeleteSprint}
                   height={16}
@@ -57,16 +65,9 @@ const Sprints = ({
                 />
               </div>
             </div>
-            <p className="text-sm md:text-md my-2 text-pretty">
+            <p className="text-sm md:text-md my-1 text-pretty">
               {sprint.shortdescription}
             </p>
-            <Image
-              src="/default-profile.png"
-              height={20}
-              width={20}
-              alt="profile image sprint"
-              className="absolute right-3 bottom-3"
-            />
           </div>
         ))
       ) : (

@@ -19,7 +19,7 @@ const AnimatedModal = ({ isOpen, onClose, children }: AnimatedModalProps) => {
           onClick={onClose}
         >
           <motion.div
-            className="p-4 max-w-md w-[95vw] mx-auto mt-32 bg-[#FDECEC]/90 rounded-[22px] shadow-lg relative flex flex-col"
+            className="p-4 max-w-md w-[95vw] mx-auto mt-32 bg-white/60 rounded-[22px] shadow-lg relative flex flex-col"
             initial={{ y: 50, opacity: 0, scale: 0.95 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 50, opacity: 0, scale: 0.95 }}

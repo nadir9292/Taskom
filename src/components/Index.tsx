@@ -10,6 +10,8 @@ import { ScrumStepType } from '@/src/types/ScrumStepType'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
 import * as motion from 'motion/react-client'
 import { containerOnAppear } from '@/src/motion-tools/onAppear'
+import SprintDetails from '@/src/components/modal/SprintDetails'
+import { useSelectContext } from '@/src/contexts/SelectedContext'
 
 type Props = { user: UserType }
 
@@ -21,6 +23,7 @@ const Index = ({ user }: Props) => {
   const [isOpenDisclosure, setIsOpenDisclosure] = useState<boolean>(true)
   const [isOpenModalCreateScrumtab, setIsOpenModalCreateScrumtab] =
     useState<boolean>(false)
+  const { isOpenSprintDetails, setIsOpenSprintDetails } = useSelectContext()
 
   useEffect(() => {
     if (!selectedTabId || !scrumtabs?.scrumtabs) return
@@ -137,6 +140,10 @@ const Index = ({ user }: Props) => {
         user={user}
         closeCreateModal={() => setIsOpenModalCreateScrumtab(false)}
         isOpen={isOpenModalCreateScrumtab}
+      />
+      <SprintDetails
+        closeSprintDetails={() => setIsOpenSprintDetails(false)}
+        isOpen={isOpenSprintDetails}
       />
     </>
   )

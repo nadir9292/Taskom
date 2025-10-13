@@ -33,7 +33,7 @@ const NavBar = () => {
     <>
       {windowWidth >= 600 ? (
         <>
-          <div className=" w-[95vw] mx-auto navbar rounded-[22px] mt-4 shadow-lg bg-white/50 ">
+          <div className="w-[95vw] mx-auto navbar rounded-[22px] mt-4 shadow-lg bg-white/50 ">
             <div className="flex-1">
               <Link href="/" className="btn btn-ghost text-xl">
                 Taskom

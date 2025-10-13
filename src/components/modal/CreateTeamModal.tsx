@@ -3,6 +3,7 @@ import TagInput from '@eidellev/react-tag-input'
 import axios from 'axios'
 import { UserType } from '@/src/types/UserType'
 import AnimatedModal from '@/src/components/utils/AnimatedModal'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 
 type Props = {
   user: UserType
@@ -53,7 +54,7 @@ export default function CreateTeamModal({
         className="btn btn-ghost absolute top-4 right-2"
         onClick={closeCreateModal}
       >
-        X
+        <XMarkIcon width={20} height={20} />
       </button>
       <h1 className="text-center text-2xl mt-2 font-medium text-gray-900">
         Create your team

@@ -1,4 +1,5 @@
 import AnimatedModal from '@/src/components/utils/AnimatedModal'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 
 type Props = {
@@ -20,7 +21,7 @@ const ConfirmDelete = ({
         className="btn btn-ghost absolute top-4 right-2"
         onClick={closeCreateModal}
       >
-        X
+         <XMarkIcon width={20} height={20} />
       </button>
       <h1 className="text-center text-2xl mt-8 font-medium text-gray-900">
         Are you sure you want to delete this sprint?
