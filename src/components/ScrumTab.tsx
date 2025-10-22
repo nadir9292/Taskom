@@ -71,14 +71,15 @@ const ScrumTab = ({ scrumSteps, sprints, iduser }: Props) => {
     <>
       <div
         className="carousel carousel-center w-full space-x-4 p-4"
-        style={{ height: 'calc(100vh - 190px)' }}
+        style={{ height: 'calc(100vh - 140px)' }}
       >
         {[...scrumSteps]
           .sort((a, b) => a.order - b.order)
           .map((step: ScrumStepType) => (
             <div
               key={step.idscrumstep}
-              className="grid grid-cols-1 h-fit carousel-item bg-white/60 rounded-[22px] shadow-sm p-4 w-[85vw] md:w-56 max-h-[620px] md:max-h-[720px] overflow-y-auto"
+              className="grid grid-cols-1 h-fit carousel-item bg-white/60 rounded-[22px] shadow-sm p-4 w-[85vw] md:w-56 overflow-y-auto"
+              style={{ maxHeight: 'calc(100vh - 200px)' }}
             >
               <div className="flex justify-between items-start w-full">
                 <p className="font-medium">{step.title}</p>

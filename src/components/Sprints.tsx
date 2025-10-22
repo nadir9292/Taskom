@@ -58,7 +58,10 @@ const Sprints = ({
               </div>
               <div className="flex items-center">
                 <TrashIcon
-                  onClick={openConfirmDeleteSprint}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    openConfirmDeleteSprint()
+                  }}
                   height={16}
                   width={16}
                   className="text-red-500 md:opacity-0 md:group-hover:opacity-100 md:hover:scale-110 md:transition-opacity md:duration-200"
