@@ -93,6 +93,21 @@ const CreateSprint = ({
     }, 3000)
   }
 
+  const resetForm = () => {
+    setSprintForm({
+      enddate: new Date(),
+      history: null,
+      idscrumstep: null,
+      idsprint: null,
+      iduseraffected: null,
+      longdescription: null,
+      shortdescription: null,
+      startdate: new Date(),
+      tag: null,
+      title: null,
+    })
+  }
+
   const createSprint = async (event: FormEvent) => {
     event.preventDefault()
 
@@ -106,12 +121,13 @@ const CreateSprint = ({
         iduseraffected: idUser,
       })
 
-      await refreshData()
+      refreshData()
 
       setSnackBar((prev) => ({
         ...prev,
         success: { message: 'Sprint created.', active: true },
       }))
+      resetForm()
       resetSnackBar()
     } catch {
       setSnackBar((prev) => ({
@@ -167,13 +183,13 @@ const CreateSprint = ({
           required
           placeholder="Title"
           className="input mb-4 w-full rounded-[22px] bg-white/50 border-transparent shadow-md"
-          value={sprintForm.title}
+          value={sprintForm.title ? sprintForm.title : ''}
           onChange={handleChange}
         />
 
         <select
           name="tag"
-          value={sprintForm.tag}
+          value={sprintForm.tag ? sprintForm.tag : ''}
           onChange={handleChange}
           required
           className="select mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
@@ -193,7 +209,7 @@ const CreateSprint = ({
           placeholder="Short description"
           required
           className="textarea mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-          value={sprintForm.shortdescription}
+          value={sprintForm.shortdescription ? sprintForm.shortdescription : ''}
           onChange={handleChange}
         />
 
@@ -202,7 +218,7 @@ const CreateSprint = ({
           placeholder="Long description"
           required
           className="textarea mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-          value={sprintForm.longdescription}
+          value={sprintForm.longdescription ? sprintForm.longdescription : ''}
           onChange={handleChange}
         />
 

@@ -1,12 +1,12 @@
 export type SprintType = {
-  idsprint?: number
-  tag?: string
-  title?: string
-  shortdescription?: string
+  idsprint?: number | null
+  tag?: string | null
+  title?: string | null
+  shortdescription?: string | null
   startdate?: Date
   enddate?: Date
-  longdescription?: string
-  history?: string
+  longdescription?: string | null
+  history?: string | null
   idscrumstep?: number | null
   iduseraffected?: number | null
 }
