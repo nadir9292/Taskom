@@ -9,6 +9,7 @@ import { useSelectContext } from '@/src/contexts/SelectedContext'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
 import { SnackBarStatus } from '@/src/types/SnackBarStatus'
 import { SprintType } from '@/src/types/SprintType'
+import { PencilSquareIcon } from '@heroicons/react/24/outline'
 import axios from 'axios'
 import React, { useState } from 'react'
 
@@ -70,7 +71,7 @@ const ScrumTab = ({ scrumSteps, sprints, iduser }: Props) => {
   return (
     <>
       <div
-        className="carousel carousel-center w-full space-x-4 p-4"
+        className="carousel carousel-center w-full space-x-4 mt-2 px-4"
         style={{ height: 'calc(100vh - 140px)' }}
       >
         {[...scrumSteps]
@@ -78,12 +79,12 @@ const ScrumTab = ({ scrumSteps, sprints, iduser }: Props) => {
           .map((step: ScrumStepType) => (
             <div
               key={step.idscrumstep}
-              className="grid grid-cols-1 h-fit carousel-item bg-white/60 rounded-[22px] shadow-sm p-4 w-[85vw] md:w-56 overflow-y-auto"
+              className="grid grid-cols-1 h-fit carousel-item bg-white/30 rounded-3xl shadow-sm p-4 w-[85vw] md:w-56 overflow-y-auto"
               style={{ maxHeight: 'calc(100vh - 200px)' }}
             >
-              <div className="flex justify-between items-start w-full">
-                <p className="font-medium">{step.title}</p>
-                <p>...</p>
+              <div className="flex justify-between items-center w-full">
+                <p className="font-medium ml-1 uppercase">{step.title}</p>
+                <PencilSquareIcon height={20} width={20} />
               </div>
               <Sprints
                 sprints={sprints}

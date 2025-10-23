@@ -33,7 +33,7 @@ const Sprints = ({
 
   return (
     <>
-      <div className="flex justify-center my-2 bg-white/60 rounded-[22px] shadow-sm p-3 max-h-12 mt-2">
+      <div className="flex justify-center bg-white/60 rounded-2xl shadow-sm max-h-12 py-3 px-2 my-2">
         <button className="btn btn-secondary btn-xs" onClick={openCreateModal}>
           + New sprint
         </button>
@@ -43,7 +43,7 @@ const Sprints = ({
           <div
             key={sprint.idsprint}
             onClick={() => onSelectSprint(sprint)}
-            className="group my-2 bg-white/70 backdrop-blur-lg rounded-[22px] shadow-sm p-3 hover:scale-105 cursor-pointer"
+            className="group bg-white/70 backdrop-blur-lg rounded-2xl shadow-sm hover:scale-105 cursor-pointer py-3 px-2 my-2"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
@@ -53,7 +53,6 @@ const Sprints = ({
                   height={20}
                   width={20}
                   alt="profile image sprint"
-                  className=""
                 />
               </div>
               <div className="flex items-center">
@@ -68,7 +67,7 @@ const Sprints = ({
                 />
               </div>
             </div>
-            <p className="text-sm md:text-md my-1 text-pretty">
+            <p className="text-sm md:text-md text-pretty">
               {sprint.shortdescription}
             </p>
           </div>

@@ -64,9 +64,11 @@ const Index = ({ user }: Props) => {
             onClick={() => setIsOpenDisclosure((prev) => !prev)}
             className="flex items-center mx-auto italic text-sm mt-4"
           >
-            <span>{!isOpenDisclosure ? 'Open menu ' : ''}</span>
+            <span className="font-bold text-zinc-100">
+              {!isOpenDisclosure ? 'Open menu ' : ''}
+            </span>
             <ChevronDownIcon
-              className={`w-5 transition-transform mx-2 ${
+              className={`w-5 transition-transform mx-2 text-zinc-100 ${
                 isOpenDisclosure ? 'rotate-180' : ''
               }`}
             />
