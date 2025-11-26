@@ -144,6 +144,7 @@ const Index = ({ user }: Props) => {
         isOpen={isOpenModalCreateScrumtab}
       />
       <SprintDetails
+        scrumSteps={scrumtabs.scrumsteps}
         closeSprintDetails={() => setIsOpenSprintDetails(false)}
         isOpen={isOpenSprintDetails}
       />

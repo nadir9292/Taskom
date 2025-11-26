@@ -6,6 +6,13 @@ import { ApiRoutesProvider } from '@/src/contexts/ApiContext'
 import SessionWrapper from '@/src/components/auth/SessionWrapper'
 import Loading from '@/src/components/utils/Loading'
 import { SelectedProvider } from '@/src/contexts/SelectedContext'
+import { Montserrat } from 'next/font/google'
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+})
 
 const RootLayoutClient = ({
   children,
@@ -13,7 +20,7 @@ const RootLayoutClient = ({
   children: React.ReactNode
 }>) => {
   return (
-    <html lang="en">
+    <html lang="en" className={montserrat.className}>
       <body className="relative min-h-screen overflow-hidden">
         <SessionWrapper>
           <SelectedProvider>

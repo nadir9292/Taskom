@@ -41,7 +41,9 @@ const NavBar = () => {
             </div>
             <div className="flex-none">
               <ul className="menu menu-horizontal items-center text-xs md:text-xl">
-                <button className="btn btn-ghost">My team</button>
+                <Link href="/my-team" className="btn btn-ghost">
+                  My team
+                </Link>
                 <li style={{ zIndex: 100 }}>
                   <div className="dropdown dropdown-end">
                     <div
@@ -67,7 +69,9 @@ const NavBar = () => {
                       className="dropdown-content menu bg-white/80 backdrop-blur-lg rounded-2xl w-52 p-2 shadow-xl"
                     >
                       <li>
-                        <button className="font-bold">My profile</button>
+                        <Link href="/my-profile" className="font-bold">
+                          My profile
+                        </Link>
                       </li>
                       <li>
                         <button
