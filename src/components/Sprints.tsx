@@ -1,6 +1,6 @@
 import { useSelectContext } from '@/src/contexts/SelectedContext'
 import { SprintType } from '@/src/types/SprintType'
-import { TrashIcon } from '@heroicons/react/24/outline'
+import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
@@ -33,49 +33,47 @@ const Sprints = ({
 
   return (
     <>
-      <div className="flex justify-center bg-white/60 rounded-2xl shadow-sm max-h-12 py-3 px-2 my-1.5">
-        <button className="btn btn-secondary btn-xs" onClick={openCreateModal}>
-          + New sprint
-        </button>
-      </div>
-      {selectedSprints ? (
-        selectedSprints.map((sprint) => (
-          <div
-            key={sprint.idsprint}
-            onClick={() => onSelectSprint(sprint)}
-            className="group bg-white/70 backdrop-blur-lg rounded-2xl shadow-sm hover:scale-105 cursor-pointer p-2 my-1.5"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1">
-                <div className="badge badge-primary">{sprint.tag}</div>
-                <Image
-                  src="/default-profile.png"
-                  height={20}
-                  width={20}
-                  alt="profile image sprint"
-                />
-              </div>
-              <div className="flex items-center">
-                <TrashIcon
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    openConfirmDeleteSprint()
-                  }}
-                  height={16}
-                  width={16}
-                  className="text-red-500 md:opacity-0 md:group-hover:opacity-100 md:hover:scale-110 md:transition-opacity md:duration-200"
-                />
-              </div>
+      <button
+        onClick={openCreateModal}
+        className="flex items-center justify-center gap-1.5 w-full py-2 mb-2 rounded-xl text-white/40 text-xs border border-dashed border-white/10 hover:border-violet-500/40 hover:text-violet-400 hover:bg-violet-500/5 transition-all"
+      >
+        <PlusIcon className="w-3.5 h-3.5" />
+        New sprint
+      </button>
+
+      {selectedSprints?.map((sprint) => (
+        <div
+          key={sprint.idsprint}
+          onClick={() => onSelectSprint(sprint)}
+          className="group glass-card rounded-xl p-3 mb-2 cursor-pointer"
+        >
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="glass-badge">{sprint.tag}</span>
+            <div className="flex items-center gap-1.5">
+              <Image
+                src="/default-profile.png"
+                height={18}
+                width={18}
+                alt="assignee"
+                className="rounded-md opacity-60"
+              />
+              <TrashIcon
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setSprintSelected(sprint)
+                  openConfirmDeleteSprint()
+                }}
+                className="w-3.5 h-3.5 text-red-400/50 md:opacity-0 md:group-hover:opacity-100 transition-opacity hover:text-red-400"
+              />
             </div>
-            <p className="text-sm md:text-md text-pretty">
-              {sprint.shortdescription}
-            </p>
           </div>
-        ))
-      ) : (
-        <></>
-      )}
+          <p className="text-xs text-white/70 leading-relaxed line-clamp-3">
+            {sprint.shortdescription}
+          </p>
+        </div>
+      ))}
     </>
   )
 }
+
 export default Sprints

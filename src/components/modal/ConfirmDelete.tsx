@@ -8,36 +8,37 @@ type Props = {
   confirmDeletion: () => void
 }
 
-const ConfirmDelete = ({
-  isOpen,
-  closeCreateModal,
-  confirmDeletion,
-}: Props) => {
+const ConfirmDelete = ({ isOpen, closeCreateModal, confirmDeletion }: Props) => {
   if (!isOpen) return null
 
   return (
     <AnimatedModal isOpen={isOpen} onClose={closeCreateModal}>
       <button
-        className="btn btn-ghost absolute top-4 right-2"
+        className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/8 transition-colors"
         onClick={closeCreateModal}
       >
-         <XMarkIcon width={20} height={20} />
+        <XMarkIcon className="w-5 h-5 text-white/60" />
       </button>
-      <h1 className="text-center text-2xl mt-8 font-medium text-gray-900">
-        Are you sure you want to delete this sprint?
+
+      <h1 className="text-center text-lg font-semibold text-white mt-4 mb-6">
+        Delete this sprint?
       </h1>
-      <div className="flex items-center gap-x-2 justify-center mt-4">
-        <button className="btn btn-secondary" onClick={closeCreateModal}>
-          NO
+
+      <div className="flex gap-3">
+        <button
+          className="btn-glass flex-1 py-2.5"
+          onClick={closeCreateModal}
+        >
+          Cancel
         </button>
         <button
-          className="btn btn-primary"
+          className="btn-danger-glass flex-1 py-2.5"
           onClick={() => {
             closeCreateModal()
             confirmDeletion()
           }}
         >
-          YES
+          Delete
         </button>
       </div>
     </AnimatedModal>

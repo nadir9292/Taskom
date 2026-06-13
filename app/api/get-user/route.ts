@@ -7,15 +7,17 @@ export async function GET(req: NextRequest) {
   const email = req.nextUrl.searchParams.get('email')
 
   if (!email) {
-    return NextResponse.json('user data not found', { status: 401 })
+    return NextResponse.json({ message: 'Missing email parameter' }, { status: 400 })
   }
 
   try {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('User')
       .select()
       .eq('email', email)
       .single()
+
+    if (error) throw error
 
     return NextResponse.json(data, { status: 200 })
   } catch (error) {

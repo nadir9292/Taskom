@@ -7,11 +7,13 @@ export async function DELETE(req: NextRequest) {
   const body = await req.json()
 
   try {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('sprint')
       .delete()
       .eq('idsprint', body.sprintid)
       .select()
+
+    if (error) throw error
 
     return NextResponse.json(data, { status: 200 })
   } catch (error) {

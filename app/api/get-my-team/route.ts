@@ -7,14 +7,16 @@ export async function GET(req: NextRequest) {
   const idteam = req.nextUrl.searchParams.get('idteam')
 
   if (!idteam) {
-    return NextResponse.json('team id data not found', { status: 401 })
+    return NextResponse.json({ message: 'Missing idteam parameter' }, { status: 400 })
   }
 
   try {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('User')
       .select('iduser, firstname, lastname, profileimage, job')
       .eq('idteam', idteam)
+
+    if (error) throw error
 
     return NextResponse.json(data, { status: 200 })
   } catch (error) {

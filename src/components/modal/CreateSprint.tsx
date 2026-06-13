@@ -16,34 +16,12 @@ type Props = {
 }
 
 const tags = [
-  'Fullstack',
-  'Front',
-  'Back',
-  'Bug',
-  'UI/UX',
-  'Integration',
-  'Feature',
-  'Refacto',
-  'Testing',
-  'Design',
-  'API',
-  'Performance',
-  'Security',
-  'Documentation',
-  'DevOps',
-  'Review',
-  'Hotfix',
-  'WIP',
-  'Done',
-  'Blocked',
+  'Fullstack', 'Front', 'Back', 'Bug', 'UI/UX', 'Integration',
+  'Feature', 'Refacto', 'Testing', 'Design', 'API', 'Performance',
+  'Security', 'Documentation', 'DevOps', 'Review', 'Hotfix', 'WIP', 'Done', 'Blocked',
 ]
 
-const CreateSprint = ({
-  idUser,
-  scrumsteps,
-  isOpen,
-  closeCreateModal,
-}: Props) => {
+const CreateSprint = ({ idUser, scrumsteps, isOpen, closeCreateModal }: Props) => {
   const { refreshData } = useApiRoutes()
   const [sprintForm, setSprintForm] = useState<SprintType>({
     tag: '',
@@ -70,9 +48,7 @@ const CreateSprint = ({
   }, [scrumsteps])
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target
     setSprintForm((prev) => ({ ...prev, [name]: value }))
@@ -110,19 +86,11 @@ const CreateSprint = ({
 
   const createSprint = async (event: FormEvent) => {
     event.preventDefault()
-
     if (!sprintForm.idscrumstep) return
-
     setIsLoading(true)
-
     try {
-      await axios.post('/api/create-sprint', {
-        ...sprintForm,
-        iduseraffected: idUser,
-      })
-
+      await axios.post('/api/create-sprint', { ...sprintForm, iduseraffected: idUser })
       refreshData()
-
       setSnackBar((prev) => ({
         ...prev,
         success: { message: 'Sprint created.', active: true },
@@ -150,26 +118,25 @@ const CreateSprint = ({
   return (
     <AnimatedModal isOpen={isOpen} onClose={closeCreateModal}>
       <button
-        className="btn btn-ghost absolute top-4 right-2"
+        className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/8 transition-colors"
         onClick={closeCreateModal}
       >
-        <XMarkIcon width={20} height={20} />
+        <XMarkIcon className="w-5 h-5 text-white/60" />
       </button>
-      <h1 className="text-center text-2xl mt-2 font-medium text-gray-900">
+
+      <h1 className="text-center text-xl font-semibold text-white mb-5">
         New Sprint
       </h1>
 
-      <form className="mt-6" onSubmit={createSprint}>
+      <form className="space-y-3" onSubmit={createSprint}>
         <select
           name="idscrumstep"
-          className="select mb-4 w-full rounded-[22px] bg-white/50 border-transparent shadow-md"
+          className="glass-input"
           value={sprintForm.idscrumstep ?? ''}
           onChange={handleChange}
           required
         >
-          <option value="" disabled>
-            Select step
-          </option>
+          <option value="" disabled>Select step</option>
           {sortedSteps.map((step) => (
             <option key={step.idscrumstep} value={step.idscrumstep}>
               {step.order} : {step.title}
@@ -182,25 +149,21 @@ const CreateSprint = ({
           type="text"
           required
           placeholder="Title"
-          className="input mb-4 w-full rounded-[22px] bg-white/50 border-transparent shadow-md"
-          value={sprintForm.title ? sprintForm.title : ''}
+          className="glass-input"
+          value={sprintForm.title ?? ''}
           onChange={handleChange}
         />
 
         <select
           name="tag"
-          value={sprintForm.tag ? sprintForm.tag : ''}
+          value={sprintForm.tag ?? ''}
           onChange={handleChange}
           required
-          className="select mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
+          className="glass-input"
         >
-          <option value="" disabled>
-            Select tag
-          </option>
+          <option value="" disabled>Select tag</option>
           {tags.map((tag, i) => (
-            <option key={i} value={tag}>
-              {tag}
-            </option>
+            <option key={i} value={tag}>{tag}</option>
           ))}
         </select>
 
@@ -208,8 +171,9 @@ const CreateSprint = ({
           name="shortdescription"
           placeholder="Short description"
           required
-          className="textarea mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-          value={sprintForm.shortdescription ? sprintForm.shortdescription : ''}
+          className="glass-input resize-none"
+          rows={2}
+          value={sprintForm.shortdescription ?? ''}
           onChange={handleChange}
         />
 
@@ -217,21 +181,22 @@ const CreateSprint = ({
           name="longdescription"
           placeholder="Long description"
           required
-          className="textarea mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
-          value={sprintForm.longdescription ? sprintForm.longdescription : ''}
+          className="glass-input resize-none"
+          rows={3}
+          value={sprintForm.longdescription ?? ''}
           onChange={handleChange}
         />
 
-        <div className="flex gap-4">
-          {['startdate', 'enddate'].map((field) => (
-            <div key={field} className="flex flex-col w-full">
-              <label className="mb-1 px-2">
+        <div className="flex gap-3">
+          {(['startdate', 'enddate'] as const).map((field) => (
+            <div key={field} className="flex flex-col w-full gap-1">
+              <label className="text-xs text-white/40 px-1">
                 {field === 'startdate' ? 'Start' : 'End'} date
               </label>
               <input
                 type="date"
                 name={field}
-                className="input input-md w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
+                className="glass-input"
                 value={(sprintForm as any)[field]?.toISOString().split('T')[0]}
                 onChange={handleDateChange}
               />
@@ -239,11 +204,11 @@ const CreateSprint = ({
           ))}
         </div>
 
-        <button className="btn btn-secondary btn-lg mt-4 w-full shadow-md">
+        <button className="btn-violet btn-violet-lg">
           {isLoading ? (
-            <span className="loading loading-dots loading-lg"></span>
+            <span className="loading loading-dots loading-md" />
           ) : (
-            <span>Add new sprint</span>
+            'Add sprint'
           )}
         </button>
       </form>

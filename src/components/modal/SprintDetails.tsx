@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSelectContext } from '@/src/contexts/SelectedContext'
-import { PencilSquareIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 import React, { useState } from 'react'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
 import axios from 'axios'
@@ -40,24 +40,16 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
         idsprint: sprintSelected?.idsprint,
         idStep: step.idscrumstep,
       })
-
       await refreshData()
-
       setSnackBar((prev) => ({
         ...prev,
-        success: {
-          message: `the sprint is move to ${step.title}`,
-          active: true,
-        },
+        success: { message: `Moved to ${step.title}`, active: true },
       }))
       resetSnackBar()
     } catch {
       setSnackBar((prev) => ({
         ...prev,
-        error: {
-          message: 'Failed to change the status sprint.',
-          active: true,
-        },
+        error: { message: 'Failed to change status.', active: true },
       }))
       setTimeout(() => {
         setSnackBar((prev) => ({
@@ -73,58 +65,67 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div className="fixed inset-0 h-full w-full backdrop-blur-lg z-50">
+        <motion.div
+          className="fixed inset-0 h-full w-full z-50"
+          style={{ backdropFilter: 'blur(12px)', background: 'rgba(5, 5, 26, 0.5)' }}
+          onClick={closeSprintDetails}
+        >
           <motion.div
-            className="absolute inset-x-0 mx-auto bottom-0 p-4 max-w-2xl w-[95vw] bg-[#F2F0EF]/70 h-full max-h-11/12 rounded-t-[22px] shadow-lg flex flex-col"
-            initial={{ y: 100 }}
+            className="glass-strong absolute inset-x-0 mx-auto bottom-0 p-5 max-w-2xl w-[95vw] max-h-[90%] rounded-t-2xl flex flex-col"
+            initial={{ y: '100%' }}
             animate={{ y: 0 }}
-            exit={{ y: 100 }}
-            transition={{ precision: 0.001 }}
+            exit={{ y: '100%' }}
+            transition={{ type: 'spring', stiffness: 400, damping: 35 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div>
-              <div className="flex justify-between items-center">
-                <XMarkIcon
-                  onClick={closeSprintDetails}
-                  className="w-6 h-6 cursor-pointer"
-                />
-                <PencilSquareIcon className="w-6 h-6 text-orange-600 cursor-pointer" />
-              </div>
-
-              <h1 className="font-bold uppercase p-2 text-center flex-1 my-4">
-                {sprintSelected?.title}
-              </h1>
-              <div className="flex justify-between items-center mb-4">
-                <span className="badge badge-primary">
-                  {sprintSelected?.tag}
-                </span>
-                <span className="font-thin italic">
-                  {sprintSelected?.startdate?.toString()} -{' '}
-                  {sprintSelected?.enddate?.toString()}
-                </span>
-              </div>
-              <p className="my-2 text-pretty">
-                <span className="font-semibold underline">
-                  Short description :<br />
-                </span>
-                {sprintSelected?.shortdescription || 'No short description'}
-              </p>
-              <p className="my-2 text-pretty">
-                <span className="font-semibold underline">
-                  Long description :<br />
-                </span>
-                {sprintSelected?.longdescription || 'No long description'}
-              </p>
+            <div className="flex justify-between items-center mb-4">
+              <button
+                onClick={closeSprintDetails}
+                className="p-1.5 rounded-lg hover:bg-white/8 transition-colors"
+              >
+                <XMarkIcon className="w-5 h-5 text-white/60" />
+              </button>
+              <div className="w-10 h-1 rounded-full bg-white/20 mx-auto absolute left-1/2 -translate-x-1/2 top-3" />
+              <span className="glass-badge">{sprintSelected?.tag}</span>
             </div>
-            <div className="absolute inset-x-0 bottom-0 mb-4 p-2 text-center">
-              <p className="mb-2 font-medium">Change status of sprint</p>
-              <div>
+
+            <h1 className="text-lg font-semibold text-white text-center mb-1">
+              {sprintSelected?.title}
+            </h1>
+            <p className="text-xs text-white/40 text-center italic mb-5">
+              {sprintSelected?.startdate?.toString()} — {sprintSelected?.enddate?.toString()}
+            </p>
+
+            <div className="space-y-3 flex-1 overflow-y-auto">
+              <div className="glass-card rounded-xl p-3">
+                <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold mb-1">
+                  Short description
+                </p>
+                <p className="text-sm text-white/75 leading-relaxed">
+                  {sprintSelected?.shortdescription || '—'}
+                </p>
+              </div>
+              <div className="glass-card rounded-xl p-3">
+                <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold mb-1">
+                  Long description
+                </p>
+                <p className="text-sm text-white/75 leading-relaxed">
+                  {sprintSelected?.longdescription || '—'}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 pt-4 border-t border-white/8">
+              <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold text-center mb-3">
+                Move to
+              </p>
+              <div className="flex flex-wrap gap-2 justify-center">
                 {[...scrumSteps]
                   .sort((a, b) => a.order - b.order)
                   .map((step) => (
                     <button
                       key={step.idscrumstep}
-                      className="btn btn-secondary mx-2"
+                      className="btn-glass text-xs py-1.5 px-3"
                       onClick={() => updateSprintStep(step)}
                     >
                       {step.title}
@@ -132,6 +133,7 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
                   ))}
               </div>
             </div>
+
             <SnackBar error={snackBar.error} success={snackBar.success} />
           </motion.div>
         </motion.div>

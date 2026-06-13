@@ -18,12 +18,14 @@ export async function POST(req: NextRequest) {
 
     if (insertError) throw insertError
 
-    await supabase
+    const { error: updateError } = await supabase
       .from('User')
       .update({
         idteam: teamData.idteam,
       })
       .eq('iduser', data.idleader)
+
+    if (updateError) throw updateError
 
     return NextResponse.json('Team has been created.', { status: 200 })
   } catch (error) {

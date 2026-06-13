@@ -7,7 +7,7 @@ import { containerOnAppear } from '@/src/motion-tools/onAppear'
 type Props = { myTeam: UserType[] }
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 16 },
   visible: { opacity: 1, y: 0 },
 }
 
@@ -20,47 +20,57 @@ const TeamList = ({ myTeam }: Props) => {
             variants={containerOnAppear}
             initial="hidden"
             animate="visible"
-            exit={{ opacity: 0, y: 20 }}
+            exit={{ opacity: 0, y: 16 }}
           >
             <div className="mx-auto w-[95vw] md:w-[70vw]">
-              <ul className="mt-4 py-2 rounded-[22px] max-h-[650px] overflow-auto shadow-lg bg-white/50">
-                <li className="list-row p-4 pb-2 opacity-60 tracking-wide text-xs flex justify-between">
-                  <p className="font-bold">Your team</p>
-                  <h1 className="italic">sprint counter</h1>
-                </li>
+              <div className="mt-4 glass rounded-2xl overflow-hidden">
+                <div className="px-5 py-3 border-b border-white/8 flex justify-between items-center">
+                  <p className="text-xs text-white/40 font-semibold uppercase tracking-wider">
+                    Your team
+                  </p>
+                  <p className="text-xs text-white/30 italic">sprint counter</p>
+                </div>
+
                 {myTeam.map((teammate, index) => (
-                  <motion.li
+                  <motion.div
                     variants={itemVariants}
                     key={index}
-                    className="list-row p-4 flex items-center gap-4"
+                    className="flex items-center gap-4 px-5 py-4 border-b border-white/5 last:border-b-0 hover:bg-white/4 transition-colors"
                   >
                     <Image
                       src={teammate.profileimage || '/default-profile.png'}
-                      width={40}
-                      height={40}
+                      width={38}
+                      height={38}
                       quality={40}
                       priority
-                      alt="profile image team"
-                      className="shadow-xl rounded-[22px] object-cover"
+                      alt="profile"
+                      className="rounded-xl border border-white/12 object-cover"
                     />
-                    <div className="flex-1 text-sm md:text-md">
-                      <div>
+                    <div className="flex-1">
+                      <p className="text-sm text-white/85 font-medium">
                         {teammate.firstname}{' '}
                         <span className="uppercase">{teammate.lastname}</span>
-                      </div>
-                      <div className="uppercase font-medium opacity-60">
+                      </p>
+                      <p className="text-xs text-white/35 uppercase tracking-wide mt-0.5">
                         {teammate.job}
-                      </div>
+                      </p>
                     </div>
-                    <div className="badge badge-primary badge-xs md:badge-sm">
-                      Doing : <span className="font-bold">0</span>
+                    <div className="flex items-center gap-2">
+                      <span className="glass-badge">Doing: 0</span>
+                      <span
+                        className="glass-badge"
+                        style={{
+                          background: 'rgba(6, 182, 212, 0.15)',
+                          borderColor: 'rgba(6, 182, 212, 0.3)',
+                          color: '#67e8f9',
+                        }}
+                      >
+                        Pending: 0
+                      </span>
                     </div>
-                    <div className="badge badge-secondary badge-xs md:badge-sm">
-                      Pending : <span className="font-bold">0</span>
-                    </div>
-                  </motion.li>
+                  </motion.div>
                 ))}
-              </ul>
+              </div>
             </div>
           </motion.div>
         )}

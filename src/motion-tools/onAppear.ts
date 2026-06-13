@@ -7,7 +7,7 @@ export const containerOnAppear = {
       staggerChildren: 0.1,
       when: 'beforeChildren',
       duration: 0.5,
-      ease: 'easeOut',
+      ease: 'easeOut' as const,
     },
   },
 }

@@ -19,77 +19,71 @@ const NavBar = () => {
   useEffect(() => {
     setMounted(true)
     const handleWindowResize = () => setWindowWidth(window.innerWidth)
-
     handleWindowResize()
     window.addEventListener('resize', handleWindowResize)
     return () => window.removeEventListener('resize', handleWindowResize)
   }, [])
 
-  if (!mounted || !session || status !== 'authenticated') {
-    return null
-  }
+  if (!mounted || !session || status !== 'authenticated') return null
 
   return (
     <>
       {windowWidth >= 600 ? (
-        <>
-          <div className="w-[95vw] mx-auto navbar mt-4 shadow-lg bg-white/30 rounded-3xl ">
-            <div className="flex-1">
-              <Link href="/" className="btn btn-ghost text-xl">
-                Taskom
-              </Link>
-            </div>
-            <div className="flex-none">
-              <ul className="menu menu-horizontal items-center text-xs md:text-xl">
-                <Link href="/my-team" className="btn btn-ghost">
-                  My team
-                </Link>
-                <li style={{ zIndex: 100 }}>
-                  <div className="dropdown dropdown-end">
-                    <div
-                      tabIndex={0}
-                      role="button"
-                      className="font-bold flex items-center"
+        <div className="w-[95vw] mx-auto mt-4 glass rounded-2xl px-5 py-2.5 flex items-center justify-between">
+          <Link
+            href="/"
+            className="text-lg font-semibold tracking-tight text-white/90 hover:text-white transition-colors"
+          >
+            Taskom
+          </Link>
+
+          <div className="flex items-center gap-2">
+            <Link
+              href="/my-team"
+              className="btn-glass text-sm px-4 py-2"
+            >
+              My team
+            </Link>
+
+            <div className="relative" style={{ zIndex: 100 }}>
+              <div className="dropdown dropdown-end">
+                <div tabIndex={0} role="button" className="cursor-pointer">
+                  <Image
+                    src={user?.profileimage ?? '/default-profile.png'}
+                    height={36}
+                    width={36}
+                    alt="profile"
+                    priority
+                    className="rounded-xl border border-white/15 object-cover"
+                  />
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content glass rounded-xl w-44 p-1.5 shadow-2xl mt-2"
+                >
+                  <li>
+                    <Link
+                      href="/my-profile"
+                      className="block px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/8 rounded-lg transition-colors"
                     >
-                      <Image
-                        src={
-                          user?.profileimage
-                            ? user.profileimage
-                            : '/default-profile.png'
-                        }
-                        height={40}
-                        width={40}
-                        alt="profile image"
-                        priority
-                        className="rounded-2xl"
-                      />
-                    </div>
-                    <ul
-                      tabIndex={0}
-                      className="dropdown-content menu bg-white/80 backdrop-blur-lg rounded-2xl w-52 p-2 shadow-xl"
+                      My profile
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => signOut()}
+                      className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                     >
-                      <li>
-                        <Link href="/my-profile" className="font-bold">
-                          My profile
-                        </Link>
-                      </li>
-                      <li>
-                        <button
-                          onClick={() => signOut()}
-                          className="text-error font-bold"
-                        >
-                          Logout
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-              </ul>
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-        </>
+        </div>
       ) : (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95vw] p-2 flex justify-between gap-6 bg-white/30 rounded-3xl shadow-lg z-10">
+        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 w-[92vw] p-1.5 flex justify-between items-center glass rounded-2xl z-10">
           {[
             { path: '/my-team', icon: UsersIcon, label: 'My team' },
             { path: '/', icon: HomeIcon, label: 'Home' },
@@ -97,37 +91,45 @@ const NavBar = () => {
             <button
               key={path}
               onClick={() => router.push(path)}
-              className={`flex flex-col items-center justify-center w-28 h-16 rounded-2xl transition-all ${
-                pathname === path ? 'bg-white/50' : ''
+              className={`flex flex-col items-center justify-center flex-1 h-14 rounded-xl transition-all ${
+                pathname === path
+                  ? 'bg-white/10 border border-white/15'
+                  : 'hover:bg-white/5'
               }`}
             >
-              <Icon className="w-7 h-7 text-gray-700" />
-              <span className="text-xs font-medium text-gray-800 mt-1">
+              <Icon className="w-5 h-5 text-white/70" />
+              <span className="text-[10px] font-medium text-white/60 mt-1">
                 {label}
               </span>
             </button>
           ))}
 
-          <div className="relative">
-            <div tabIndex={0} className="dropdown dropdown-top dropdown-end">
-              <div className="flex flex-col items-center justify-center w-28 h-16 rounded-[22px] transition-all">
+          <div className="relative flex-1 flex justify-center">
+            <div className="dropdown dropdown-top dropdown-end">
+              <div
+                tabIndex={0}
+                className="flex flex-col items-center justify-center h-14 rounded-xl hover:bg-white/5 transition-all px-4"
+              >
                 <Image
-                  src={session.user?.image || '/default-profile.png'}
-                  height={36}
-                  width={36}
-                  className="rounded-xl"
-                  alt="image profile"
+                  src={session.user?.image ?? '/default-profile.png'}
+                  height={30}
+                  width={30}
+                  className="rounded-lg border border-white/15"
+                  alt="profile"
                 />
-                <span className="text-xs font-medium text-gray-800 mt-1">
+                <span className="text-[10px] font-medium text-white/60 mt-1">
                   {session.user?.name?.split(' ')[0]}
                 </span>
               </div>
-              <ul className="dropdown-content menu p-2 shadow bg-zinc-50 rounded-[22px] w-40 z-50 font-bold">
+              <ul className="dropdown-content glass p-1.5 rounded-xl w-36 z-50">
                 <li>
-                  <p>My profile</p>
+                  <p className="px-3 py-2 text-sm text-white/70">My profile</p>
                 </li>
                 <li>
-                  <p onClick={() => signOut()} className="text-error">
+                  <p
+                    onClick={() => signOut()}
+                    className="px-3 py-2 text-sm text-red-400 cursor-pointer hover:bg-red-500/10 rounded-lg transition-colors"
+                  >
                     Logout
                   </p>
                 </li>

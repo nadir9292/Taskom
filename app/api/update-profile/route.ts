@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json()
 
-    await supabase
+    const { error } = await supabase
       .from('User')
       .update({
         lastname: data.lastname,
@@ -15,6 +15,8 @@ export async function POST(req: NextRequest) {
         job: data.job,
       })
       .eq('email', data.email)
+
+    if (error) throw error
 
     return NextResponse.json('User profile has been updated correctly', {
       status: 200,

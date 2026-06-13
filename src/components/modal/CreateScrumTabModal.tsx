@@ -5,6 +5,7 @@ import SnackBar from '@/src/components/utils/SnackBar'
 import { UserType } from '@/src/types/UserType'
 import { SnackBarStatus } from '@/src/types/SnackBarStatus'
 import AnimatedModal from '@/src/components/utils/AnimatedModal'
+import { useApiRoutes } from '@/src/contexts/ApiContext'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
 type Props = {
@@ -16,6 +17,7 @@ type Props = {
 const defaultSteps = ['backlog', 'to do', 'doing', 'test', 'done']
 
 const CreateScrumTabModal = ({ user, closeCreateModal, isOpen }: Props) => {
+  const { refreshData } = useApiRoutes()
   const [scrumTabName, setScrumTabName] = useState('')
   const [scrumSteps, setScrumSteps] = useState(defaultSteps)
   const [isLoading, setIsLoading] = useState(false)
@@ -27,9 +29,7 @@ const CreateScrumTabModal = ({ user, closeCreateModal, isOpen }: Props) => {
     success: { active: false, message: null },
   })
 
-  const handleStepChange = (newTags: string[]) => {
-    setScrumSteps(newTags)
-  }
+  const handleStepChange = (newTags: string[]) => setScrumSteps(newTags)
 
   const resetSnackBar = () => {
     setTimeout(() => {
@@ -44,26 +44,22 @@ const CreateScrumTabModal = ({ user, closeCreateModal, isOpen }: Props) => {
   const createScrumTab = async (e: FormEvent) => {
     e.preventDefault()
     if (scrumTabName.length <= 2) return
-
     setIsLoading(true)
     try {
       await axios.post('/api/create-scrumtab', {
         idteam: user.idteam,
         title: scrumTabName,
-        scrumsteps: scrumSteps.map((step, i) => ({
-          stepName: step,
-          order: i + 1,
-        })),
+        scrumsteps: scrumSteps.map((step, i) => ({ stepName: step, order: i + 1 })),
       })
-
+      await refreshData()
       setSnackBar((prev) => ({
         ...prev,
-        success: { active: true, message: 'Success.' },
+        success: { active: true, message: 'Board created.' },
       }))
     } catch {
       setSnackBar((prev) => ({
         ...prev,
-        error: { active: true, message: 'Error.' },
+        error: { active: true, message: 'Error creating board.' },
       }))
     } finally {
       setIsLoading(false)
@@ -76,29 +72,31 @@ const CreateScrumTabModal = ({ user, closeCreateModal, isOpen }: Props) => {
   return (
     <AnimatedModal isOpen={isOpen} onClose={closeCreateModal}>
       <button
-        className="btn btn-ghost absolute top-4 right-2"
+        className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/8 transition-colors"
         onClick={closeCreateModal}
       >
-        <XMarkIcon width={20} height={20} />
+        <XMarkIcon className="w-5 h-5 text-white/60" />
       </button>
-      <h1 className="text-center text-2xl mt-2 font-medium text-gray-900">
-        New Scrum tab
+
+      <h1 className="text-center text-xl font-semibold text-white mb-5">
+        New Board
       </h1>
-      <form className="mt-6" onSubmit={createScrumTab}>
+
+      <form className="space-y-3" onSubmit={createScrumTab}>
         <input
           type="text"
           required
-          placeholder="Title"
-          className="input mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md"
+          placeholder="Board name"
+          className="glass-input"
           value={scrumTabName}
           onChange={(e) => setScrumTabName(e.target.value)}
         />
         <TagInput value={scrumSteps} onChange={handleStepChange} colorize />
-        <button className="btn btn-secondary btn-lg mt-4 w-full shadow-md">
+        <button className="btn-violet btn-violet-lg">
           {isLoading ? (
-            <span className="loading loading-dots loading-lg"></span>
+            <span className="loading loading-dots loading-md" />
           ) : (
-            'New tab'
+            'Create board'
           )}
         </button>
       </form>

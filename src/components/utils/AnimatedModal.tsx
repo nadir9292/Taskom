@@ -12,18 +12,19 @@ const AnimatedModal = ({ isOpen, onClose, children }: AnimatedModalProps) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 h-full w-full backdrop-blur-xl z-50"
+          className="fixed inset-0 h-full w-full z-50 flex items-start justify-center"
+          style={{ backdropFilter: 'blur(12px)', background: 'rgba(5, 5, 26, 0.6)' }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
         >
           <motion.div
-            className="p-4 max-w-md w-[95vw] mx-auto mt-32 bg-white/60 rounded-[22px] shadow-lg relative flex flex-col"
-            initial={{ y: 50, opacity: 0, scale: 0.95 }}
+            className="glass-strong p-6 max-w-md w-[95vw] mx-auto mt-24 rounded-2xl relative flex flex-col"
+            initial={{ y: 40, opacity: 0, scale: 0.96 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 50, opacity: 0, scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+            exit={{ y: 40, opacity: 0, scale: 0.96 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
             onClick={(e) => e.stopPropagation()}
           >
             {children}

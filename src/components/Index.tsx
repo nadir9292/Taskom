@@ -7,7 +7,7 @@ import { useApiRoutes } from '@/src/contexts/ApiContext'
 import { ScrumTabType } from '@/src/types/ScrumTabType'
 import { UserType } from '@/src/types/UserType'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import { ChevronDownIcon, PlusIcon } from '@heroicons/react/24/outline'
 import * as motion from 'motion/react-client'
 import { containerOnAppear } from '@/src/motion-tools/onAppear'
 import SprintDetails from '@/src/components/modal/SprintDetails'
@@ -27,15 +27,12 @@ const Index = ({ user }: Props) => {
 
   useEffect(() => {
     if (!selectedTabId || !scrumtabs?.scrumtabs) return
-
     const tab = scrumtabs.scrumtabs.find(
       (tab) => tab.idscrumtab === selectedTabId
     )
-
     const step = scrumtabs.scrumsteps.filter(
       (step) => step.idscrumtab === selectedTabId
     )
-
     setSelectedTab(tab)
     setSelectedSteps(step)
     setIsOpenDisclosure(false)
@@ -62,27 +59,25 @@ const Index = ({ user }: Props) => {
         <div className="grid grid-cols-1 mx-auto">
           <button
             onClick={() => setIsOpenDisclosure((prev) => !prev)}
-            className="flex items-center mx-auto italic text-sm mt-4"
+            className="flex items-center mx-auto mt-4 text-white/50 hover:text-white/80 transition-colors"
           >
-            <span className="font-bold text-zinc-100">
-              {!isOpenDisclosure ? 'Open menu ' : ''}
-            </span>
             <ChevronDownIcon
-              className={`w-5 transition-transform mx-2 text-zinc-100 ${
+              className={`w-4 h-4 transition-transform ${
                 isOpenDisclosure ? 'rotate-180' : ''
               }`}
             />
           </button>
-          {isOpenDisclosure ? (
-            <div className="mx-auto">
-              <div className="flex items-center gap-2 mb-2">
+
+          {isOpenDisclosure && (
+            <div className="mx-auto mt-2">
+              <div className="flex items-center gap-2">
                 <select
                   onChange={handleSelectChange}
                   value={selectedTabId ?? ''}
-                  className="select bg-white/50 border-transparent shadow-lg rounded-[22px]"
+                  className="glass-input w-48 text-sm"
                 >
                   <option value="" disabled>
-                    Select Scrum tab
+                    Select board
                   </option>
                   {scrumtabs?.scrumtabs.map((tab) => (
                     <option key={tab.idscrumtab} value={tab.idscrumtab}>
@@ -90,19 +85,17 @@ const Index = ({ user }: Props) => {
                     </option>
                   ))}
                 </select>
-                <div className="min-w-[150px]">
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => setIsOpenModalCreateScrumtab(true)}
-                  >
-                    New scrum tab
-                  </button>
-                </div>
+                <button
+                  className="btn-glass flex items-center gap-1.5 py-2 px-3"
+                  onClick={() => setIsOpenModalCreateScrumtab(true)}
+                >
+                  <PlusIcon className="w-4 h-4" />
+                  New board
+                </button>
               </div>
             </div>
-          ) : (
-            <></>
           )}
+
           {selectedTab && (
             <ScrumTab
               scrumSteps={selectedSteps!}
@@ -112,6 +105,7 @@ const Index = ({ user }: Props) => {
           )}
         </div>
       </motion.div>
+
       <CreateScrumTabModal
         user={user}
         closeCreateModal={() => setIsOpenModalCreateScrumtab(false)}

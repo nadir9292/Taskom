@@ -2,10 +2,9 @@
 @import 'tw-animate-css';
 
 @plugin "daisyui" {
-  themes: pastel --default, pastel --prefersdark;
+  themes: night --default;
 }
 
-/* Styles globaux */
 html,
 body {
   height: 100%;
@@ -16,37 +15,214 @@ body {
   font-weight: 300;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
-  color: var(--foreground);
-  background-image: url('/bg-default.jpeg');
-  background-repeat: no-repeat;
-  background-size: cover;
+  background: #07071a;
+  color: #f1f5f9;
 }
 
-/* Suppression des scrollbars */
 body,
 * {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE & Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 body::-webkit-scrollbar,
 *::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
-/* Composants personnalisés */
+/* ── Liquid Glass ────────────────────────────────────────── */
+
+.glass {
+  background: rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  transition: all 0.2s ease;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(139, 92, 246, 0.35);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(139, 92, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
+}
+
+/* ── Form inputs ─────────────────────────────────────────── */
+
+.glass-input {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: #f1f5f9;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.glass-input::placeholder {
+  color: rgba(241, 245, 249, 0.35);
+}
+
+.glass-input:focus {
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+}
+
+.glass-input option {
+  background: #0f0f2e;
+  color: #f1f5f9;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+
+.btn-glass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  white-space: nowrap;
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.btn-violet {
+  background: rgba(109, 40, 217, 0.7);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  color: #fff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-violet:hover {
+  background: rgba(124, 58, 237, 0.85);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+}
+
+.btn-violet-lg {
+  padding: 0.875rem 1.5rem;
+  border-radius: 14px;
+  font-size: 0.9375rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.btn-danger-glass {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.btn-danger-glass:hover {
+  background: rgba(239, 68, 68, 0.28);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
+}
+
+/* ── Badge ───────────────────────────────────────────────── */
+
+.glass-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(139, 92, 246, 0.18);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  color: #c4b5fd;
+}
+
+/* ── Tag input ───────────────────────────────────────────── */
+
 .tag-input {
-  @apply mb-4 w-full rounded-[22px] bg-white/50 backdrop-blur-lg border-transparent shadow-md leading-8 transition-colors duration-200 ease-in-out text-white text-sm p-2;
+  @apply mb-4 w-full rounded-[14px] border-transparent shadow-md leading-8 transition-colors duration-200 ease-in-out text-white text-sm p-2;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(12px);
 }
 
 .tag-input .tag {
   @apply px-2 py-1 rounded-md mr-2;
-}
-
-.tag-input .tag .remove-tag-button {
-  @apply ml-2;
+  background: rgba(109, 40, 217, 0.5);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  color: #e9d5ff;
 }
 
 .tag-input .new-tag {
-  @apply focus:border-0 focus:outline-none text-gray-700;
+  @apply focus:border-0 focus:outline-none;
+  color: #f1f5f9;
+  background: transparent;
+}
+
+.tag-input .new-tag::placeholder {
+  color: rgba(241, 245, 249, 0.35);
 }

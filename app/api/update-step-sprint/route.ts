@@ -7,12 +7,14 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json()
 
-    await supabase
+    const { error } = await supabase
       .from('sprint')
       .update({
         idscrumstep: data.idStep,
       })
       .eq('idsprint', data.idsprint)
+
+    if (error) throw error
 
     return NextResponse.json('sprint status has been updated correctly', {
       status: 200,

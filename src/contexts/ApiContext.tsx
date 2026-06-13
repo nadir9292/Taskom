@@ -51,6 +51,7 @@ export const ApiRoutesProvider = ({ children }: ApiRoutesProviderProps) => {
         const userRes = await fetch(
           `/api/get-user?email=${session.user?.email}`
         )
+        if (!userRes.ok) throw new Error('Failed to fetch user')
         const userData: UserType = await userRes.json()
 
         if (!isMounted) return
@@ -61,6 +62,8 @@ export const ApiRoutesProvider = ({ children }: ApiRoutesProviderProps) => {
             fetch(`/api/get-my-team?idteam=${userData.idteam}`),
             fetch(`/api/get-scrumtabs?idteam=${userData.idteam}`),
           ])
+
+          if (!teamRes.ok || !scrumtabRes.ok) throw new Error('Failed to fetch team data')
 
           const [teamData, scrumtabData] = await Promise.all([
             teamRes.json(),
@@ -87,6 +90,7 @@ export const ApiRoutesProvider = ({ children }: ApiRoutesProviderProps) => {
     try {
       if (!session) return
       const userRes = await fetch(`/api/get-user?email=${session.user?.email}`)
+      if (!userRes.ok) throw new Error('Failed to fetch user')
       const userData: UserType = await userRes.json()
       setUser(userData)
 
@@ -95,6 +99,9 @@ export const ApiRoutesProvider = ({ children }: ApiRoutesProviderProps) => {
           fetch(`/api/get-my-team?idteam=${userData.idteam}`),
           fetch(`/api/get-scrumtabs?idteam=${userData.idteam}`),
         ])
+
+        if (!teamRes.ok || !scrumtabRes.ok) throw new Error('Failed to fetch team data')
+
         const [teamData, scrumtabData] = await Promise.all([
           teamRes.json(),
           scrumtabRes.json(),
