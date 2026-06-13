@@ -1,5 +1,4 @@
 import React, { FormEvent, useState } from 'react'
-import TagInput from '@eidellev/react-tag-input'
 import axios from 'axios'
 import { UserType } from '@/src/types/UserType'
 import AnimatedModal from '@/src/components/utils/AnimatedModal'
@@ -16,24 +15,7 @@ export default function CreateTeamModal({
   isOpen,
   closeCreateModal,
 }: Props) {
-  const [tags, setTags] = useState<string[]>([])
   const [teamName, setTeamName] = useState('')
-
-  const handleTeamNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTeamName(e.target.value)
-  }
-
-  const handleTagsChange = (newTags: string[]) => {
-    const validEmails = newTags.filter((tag) =>
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(tag)
-    )
-
-    if (validEmails.length < newTags.length) {
-      alert('Some emails were invalid and not added.')
-    }
-
-    setTags(validEmails)
-  }
 
   const createTeam = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -70,13 +52,7 @@ export default function CreateTeamModal({
           placeholder="Team's name"
           className="input mb-4 w-full rounded-[22px] bg-white/50 border-transparent shadow-md"
           value={teamName}
-          onChange={handleTeamNameChange}
-        />
-        <TagInput
-          value={tags}
-          onChange={handleTagsChange}
-          colorize
-          placeholder="add teammates emails"
+          onChange={(e) => setTeamName(e.target.value)}
         />
         <button
           className="btn btn-secondary btn-lg mt-4 w-full shadow-md"

@@ -1,11 +1,8 @@
 import { useApiRoutes } from '@/src/contexts/ApiContext'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import React from 'react'
 
-type Props = object
-
-const Loading = ({}: Props) => {
+const Loading = () => {
   const pathname = usePathname()
   const { user } = useApiRoutes()
 

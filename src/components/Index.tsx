@@ -99,32 +99,6 @@ const Index = ({ user }: Props) => {
                   </button>
                 </div>
               </div>
-              <div className="flex justify-center filter items-center">
-                <input
-                  className="btn filter-reset btn-sm"
-                  type="radio"
-                  name="metaframeworks"
-                  aria-label="All"
-                />
-                <input
-                  className="btn btn-sm"
-                  type="radio"
-                  name="metaframeworks"
-                  aria-label="Front"
-                />
-                <input
-                  className="btn btn-sm"
-                  type="radio"
-                  name="metaframeworks"
-                  aria-label="Back"
-                />
-                <input
-                  className="btn btn-sm"
-                  type="radio"
-                  name="metaframeworks"
-                  aria-label="Bug"
-                />
-              </div>
             </div>
           ) : (
             <></>

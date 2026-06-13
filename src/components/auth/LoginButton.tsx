@@ -1,10 +1,8 @@
 'use client'
 
 import { signIn } from 'next-auth/react'
-import React from 'react'
 
-type Props = object
-const LoginButton = ({}: Props) => {
+const LoginButton = () => {
   return (
     <div className="grid grid-cols-1 max-w-sm md:max-w-xl mx-auto mt-8">
       <button
