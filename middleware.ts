@@ -6,7 +6,10 @@ export function middleware(request: NextRequest) {
   const token2 = request.cookies.get('__Secure-next-auth.session-token')?.value
   const { pathname } = request.nextUrl
 
-  if (!token && !token2 && pathname !== '/login' && !pathname.startsWith('/invite')) {
+  const publicPaths = ['/opengraph-image', '/twitter-image']
+  const isPublic = pathname === '/login' || pathname.startsWith('/invite') || publicPaths.includes(pathname)
+
+  if (!token && !token2 && !isPublic) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 

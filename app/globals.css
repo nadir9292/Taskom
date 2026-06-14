@@ -15,8 +15,11 @@ body {
   font-weight: 300;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
-  background: #06061a;
   color: #eef0f8;
+}
+
+html {
+  background: #06061a;
 }
 
 body,
@@ -100,6 +103,89 @@ body::-webkit-scrollbar,
 .animate-float-gold   { animation: float-gold 20s ease-in-out infinite; }
 .animate-fade-in-up   { animation: fade-in-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .animate-scale-in     { animation: scale-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* ── Background blobs ────────────────────────────────────── */
+
+.blob-purple {
+  width: 700px; height: 700px;
+  top: -15%; left: -12%;
+  background: radial-gradient(circle at 40% 40%, rgba(79,31,181,0.55) 0%, rgba(30,10,92,0.3) 55%, transparent 80%);
+  filter: blur(80px);
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}
+
+.blob-blue {
+  width: 550px; height: 550px;
+  bottom: -8%; right: -8%;
+  background: radial-gradient(circle at 60% 60%, rgba(14,77,138,0.5) 0%, rgba(5,28,58,0.3) 55%, transparent 80%);
+  filter: blur(70px);
+  mix-blend-mode: screen;
+  opacity: 0.6;
+}
+
+.blob-violet {
+  width: 380px; height: 380px;
+  top: 45%; left: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(109,40,217,0.35) 0%, transparent 70%);
+  filter: blur(60px);
+  mix-blend-mode: screen;
+  opacity: 0.5;
+}
+
+.blob-teal {
+  width: 42vw; height: 42vw;
+  top: 30%; right: -8%;
+  background: radial-gradient(circle, rgba(14,122,114,0.5) 0%, transparent 70%);
+  filter: blur(90px);
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+
+.blob-gold {
+  width: 28vw; height: 28vw;
+  top: 8%; right: 22%;
+  background: radial-gradient(circle, rgba(196,122,0,0.45) 0%, transparent 70%);
+  filter: blur(80px);
+  mix-blend-mode: screen;
+  opacity: 0.35;
+}
+
+.bg-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.018) 1px, transparent 0);
+  background-size: 28px 28px;
+}
+
+@media (max-width: 640px) {
+  .blob-purple {
+    width: 280px; height: 280px;
+    filter: blur(55px);
+    opacity: 0.4;
+  }
+  .blob-blue {
+    width: 220px; height: 220px;
+    filter: blur(45px);
+    opacity: 0.35;
+  }
+  .blob-violet {
+    width: 160px; height: 160px;
+    filter: blur(40px);
+    opacity: 0.28;
+  }
+  .blob-teal {
+    width: 50vw; height: 50vw;
+    filter: blur(60px);
+    opacity: 0.3;
+  }
+  .blob-gold {
+    display: none;
+  }
+  .bg-dots {
+    display: none;
+  }
+}
 
 .bg-grain {
   position: absolute;
