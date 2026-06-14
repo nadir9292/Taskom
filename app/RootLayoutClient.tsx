@@ -21,49 +21,99 @@ const RootLayoutClient = ({
 }>) => {
   return (
     <html lang="en" className={montserrat.className}>
-      <body className="relative min-h-screen overflow-hidden">
+      <body className="relative min-h-screen overflow-x-hidden">
         <div className="fixed inset-0 -z-10" aria-hidden>
           <div
-            className="absolute rounded-full blur-[140px] opacity-30"
+            className="absolute rounded-full animate-float-slow"
             style={{
-              width: 600,
-              height: 600,
-              top: '-10%',
-              left: '-10%',
+              width: 700,
+              height: 700,
+              top: '-15%',
+              left: '-12%',
               background:
-                'radial-gradient(circle, #4f1fb5 0%, #1e0a5c 60%, transparent 100%)',
+                'radial-gradient(circle at 40% 40%, rgba(79,31,181,0.55) 0%, rgba(30,10,92,0.3) 55%, transparent 80%)',
+              filter: 'blur(80px)',
+              mixBlendMode: 'screen',
+              opacity: 0.7,
             }}
           />
           <div
-            className="absolute rounded-full blur-[120px] opacity-20"
+            className="absolute rounded-full animate-float-medium"
             style={{
-              width: 500,
-              height: 500,
-              bottom: '-5%',
-              right: '-5%',
+              width: 550,
+              height: 550,
+              bottom: '-8%',
+              right: '-8%',
               background:
-                'radial-gradient(circle, #0e4d8a 0%, #051c3a 60%, transparent 100%)',
+                'radial-gradient(circle at 60% 60%, rgba(14,77,138,0.5) 0%, rgba(5,28,58,0.3) 55%, transparent 80%)',
+              filter: 'blur(70px)',
+              mixBlendMode: 'screen',
+              opacity: 0.6,
             }}
           />
           <div
-            className="absolute rounded-full blur-[100px] opacity-15"
+            className="absolute rounded-full animate-float-subtle"
             style={{
-              width: 350,
-              height: 350,
-              top: '40%',
+              width: 380,
+              height: 380,
+              top: '45%',
               left: '50%',
-              transform: 'translate(-50%, -50%)',
               background:
-                'radial-gradient(circle, #6d28d9 0%, transparent 70%)',
+                'radial-gradient(circle at 50% 50%, rgba(109,40,217,0.35) 0%, transparent 70%)',
+              filter: 'blur(60px)',
+              mixBlendMode: 'screen',
+              opacity: 0.5,
             }}
           />
+          <div
+            className="absolute rounded-full animate-float-teal"
+            style={{
+              width: '42vw',
+              height: '42vw',
+              top: '30%',
+              right: '-8%',
+              background:
+                'radial-gradient(circle, rgba(14,122,114,0.5) 0%, transparent 70%)',
+              filter: 'blur(90px)',
+              mixBlendMode: 'screen',
+              opacity: 0.55,
+            }}
+          />
+          <div
+            className="absolute rounded-full animate-float-gold"
+            style={{
+              width: '28vw',
+              height: '28vw',
+              top: '8%',
+              right: '22%',
+              background:
+                'radial-gradient(circle, rgba(196,122,0,0.45) 0%, transparent 70%)',
+              filter: 'blur(80px)',
+              mixBlendMode: 'screen',
+              opacity: 0.35,
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `
+                radial-gradient(circle at 1px 1px, rgba(255,255,255,0.018) 1px, transparent 0)
+              `,
+              backgroundSize: '28px 28px',
+            }}
+          />
+          <div className="bg-grain" />
+          <div className="bg-vignette" />
         </div>
         <SessionWrapper>
           <SelectedProvider>
             <ApiRoutesProvider>
               <Loading />
               <NavBar />
-              {children}
+              <main className="pb-28 sm:pb-4">
+                {children}
+              </main>
             </ApiRoutesProvider>
           </SelectedProvider>
         </SessionWrapper>

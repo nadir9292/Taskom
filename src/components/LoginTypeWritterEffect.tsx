@@ -2,17 +2,31 @@ import { TypewriterEffectSmooth } from '@/src/components/ui/typewriter-effect'
 
 const LoginTypeWritterEffect = () => {
   const words = [
-    { text: 'Organize', className: 'text-xl text-white/70' },
-    { text: 'your', className: 'text-xl text-white/70' },
-    { text: 'tasks', className: 'text-xl text-white/70' },
-    { text: 'with', className: 'text-xl text-white/70' },
+    { text: 'Organize', className: 'text-xl text-white/75' },
+    { text: 'your', className: 'text-xl text-white/75' },
+    { text: 'sprints', className: 'text-xl text-white/75' },
+    { text: 'with', className: 'text-xl text-white/75' },
     { text: 'Taskom.', className: 'text-xl text-violet-400' },
   ]
 
   return (
-    <div className="flex flex-col items-center justify-center mt-24">
-      <p className="text-5xl font-semibold tracking-tight text-white">Taskom</p>
+    <div className="flex flex-col items-center justify-center mt-24 px-4 animate-fade-in-up">
+      <div className="relative mb-2">
+        <p className="text-6xl font-semibold tracking-tight text-white">
+          Taskom
+        </p>
+        <div
+          className="absolute -inset-4 rounded-3xl -z-10"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(109,40,217,0.18) 0%, transparent 70%)',
+            filter: 'blur(16px)',
+          }}
+        />
+      </div>
       <TypewriterEffectSmooth words={words} />
+      <p className="mt-4 text-sm text-white/45 font-light tracking-wide">
+        Your agile workspace — beautifully simple.
+      </p>
     </div>
   )
 }

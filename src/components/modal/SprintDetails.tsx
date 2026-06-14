@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSelectContext } from '@/src/contexts/SelectedContext'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, StarIcon } from '@heroicons/react/24/outline'
+import { StarIcon as StarSolid } from '@heroicons/react/24/solid'
 import React, { useState } from 'react'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
 import axios from 'axios'
@@ -15,8 +16,8 @@ type Props = {
 }
 
 const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
-  const { refreshData } = useApiRoutes()
-  const { sprintSelected } = useSelectContext()
+  const { refreshData, myTeam, user } = useApiRoutes()
+  const { sprintSelected, setSprintSelected } = useSelectContext()
   const [snackBar, setSnackBar] = useState<{
     error: SnackBarStatus
     success: SnackBarStatus
@@ -25,13 +26,56 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
     success: { active: false, message: null },
   })
 
-  const resetSnackBar = () => {
-    setTimeout(() => {
-      setSnackBar({
-        error: { active: false, message: null },
-        success: { active: false, message: null },
+  const getMemberName = (iduser: number) => {
+    const m = myTeam.find((u) => u.iduser === iduser)
+    if (!m) return 'Unknown'
+    return `${m.firstname} ${m.lastname?.toUpperCase()}`
+  }
+
+  const showError = (message: string) => {
+    setSnackBar((prev) => ({ ...prev, error: { message, active: true } }))
+    setTimeout(() => setSnackBar((prev) => ({ ...prev, error: { message: null, active: false } })), 3000)
+  }
+
+  const showSuccess = (message: string) => {
+    setSnackBar((prev) => ({ ...prev, success: { message, active: true } }))
+    setTimeout(() => setSnackBar((prev) => ({ ...prev, success: { message: null, active: false } })), 3000)
+  }
+
+  const updateMembers = async (members: number[], leaderId: number | null) => {
+    if (!sprintSelected?.idsprint) return
+    try {
+      await axios.patch('/api/assign-sprint-members', {
+        idsprint: sprintSelected.idsprint,
+        members,
+        leaderId,
       })
-    }, 3000)
+      setSprintSelected({ ...sprintSelected, members, iduseraffected: leaderId ?? undefined })
+      await refreshData()
+    } catch {
+      showError('Failed to update members.')
+    }
+  }
+
+  const handleSetLeader = async (iduser: number) => {
+    const members = sprintSelected?.members ?? []
+    await updateMembers(members, iduser)
+    showSuccess(`${getMemberName(iduser)} set as leader.`)
+  }
+
+  const handleRemoveMember = async (iduser: number) => {
+    const members = (sprintSelected?.members ?? []).filter((id) => id !== iduser)
+    const currentLeader = sprintSelected?.iduseraffected
+    const newLeader = currentLeader === iduser ? (members[0] ?? null) : (currentLeader ?? null)
+    await updateMembers(members, newLeader)
+    showSuccess(`${getMemberName(iduser)} removed.`)
+  }
+
+  const handleAddMember = async (iduser: number) => {
+    const members = [...(sprintSelected?.members ?? []), iduser]
+    const leader = sprintSelected?.iduseraffected ?? members[0] ?? null
+    await updateMembers(members, leader)
+    showSuccess(`${getMemberName(iduser)} added.`)
   }
 
   const updateSprintStep = async (step: ScrumStepType) => {
@@ -41,33 +85,24 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
         idStep: step.idscrumstep,
       })
       await refreshData()
-      setSnackBar((prev) => ({
-        ...prev,
-        success: { message: `Moved to ${step.title}`, active: true },
-      }))
-      resetSnackBar()
+      showSuccess(`Moved to ${step.title}`)
     } catch {
-      setSnackBar((prev) => ({
-        ...prev,
-        error: { message: 'Failed to change status.', active: true },
-      }))
-      setTimeout(() => {
-        setSnackBar((prev) => ({
-          ...prev,
-          error: { message: null, active: false },
-        }))
-      }, 3000)
+      showError('Failed to change status.')
     }
   }
 
   if (!isOpen) return null
+
+  const members = sprintSelected?.members ?? []
+  const leaderId = sprintSelected?.iduseraffected
+  const unassigned = myTeam.filter((m) => !members.includes(m.iduser!))
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
           className="fixed inset-0 h-full w-full z-50"
-          style={{ backdropFilter: 'blur(12px)', background: 'rgba(5, 5, 26, 0.5)' }}
+          style={{ backdropFilter: 'blur(16px)', background: 'rgba(4, 4, 20, 0.62)' }}
           onClick={closeSprintDetails}
         >
           <motion.div
@@ -89,28 +124,102 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
               <span className="glass-badge">{sprintSelected?.tag}</span>
             </div>
 
-            <h1 className="text-lg font-semibold text-white text-center mb-1">
+            <h1 className="text-lg font-semibold text-white text-center mb-1.5">
               {sprintSelected?.title}
             </h1>
-            <p className="text-xs text-white/40 text-center italic mb-5">
-              {sprintSelected?.startdate?.toString()} — {sprintSelected?.enddate?.toString()}
+            <p className="text-xs text-white/50 text-center font-light mb-5">
+              {sprintSelected?.startdate
+                ? new Date(sprintSelected.startdate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                : '-'}
+              {' - '}
+              {sprintSelected?.enddate
+                ? new Date(sprintSelected.enddate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                : '-'}
             </p>
 
             <div className="space-y-3 flex-1 overflow-y-auto">
               <div className="glass-card rounded-xl p-3">
+                <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold mb-2">
+                  Members
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {members.map((iduser) => {
+                    const isLeader = iduser === leaderId
+                    const isMe = iduser === user.iduser
+                    return (
+                      <div key={iduser} className="flex items-center gap-1">
+                        <span
+                          className={`text-xs px-2.5 py-1 rounded-lg border flex items-center gap-1 ${
+                            isLeader
+                              ? 'border-yellow-400/50 bg-yellow-500/15 text-yellow-200'
+                              : 'border-violet-400/40 bg-violet-500/15 text-white/80'
+                          }`}
+                        >
+                          {isLeader && <StarSolid className="w-3 h-3 text-yellow-300" />}
+                          {getMemberName(iduser)}{isMe ? ' (me)' : ''}
+                        </span>
+                        {!isLeader && (
+                          <button
+                            onClick={() => handleSetLeader(iduser)}
+                            className="p-1 rounded-lg border border-white/10 bg-white/5 text-white/25 hover:text-yellow-300/70 transition-colors"
+                            title="Set as leader"
+                          >
+                            <StarIcon className="w-3 h-3" />
+                          </button>
+                        )}
+                        <button
+                          onClick={() => handleRemoveMember(iduser)}
+                          className="p-1 rounded-lg border border-white/10 bg-white/5 text-white/25 hover:text-red-400/70 transition-colors"
+                          title="Remove"
+                        >
+                          <XMarkIcon className="w-3 h-3" />
+                        </button>
+                      </div>
+                    )
+                  })}
+                  {unassigned.length > 0 && (
+                    <select
+                      className="text-xs px-2.5 py-1 rounded-lg border border-dashed border-white/20 bg-white/5 text-white/40 hover:text-white/60 transition-colors cursor-pointer"
+                      value=""
+                      onChange={(e) => {
+                        if (e.target.value) handleAddMember(Number(e.target.value))
+                      }}
+                    >
+                      <option value="" disabled>+ Add member</option>
+                      {unassigned.map((m) => (
+                        <option key={m.iduser} value={m.iduser}>
+                          {m.firstname} {m.lastname?.toUpperCase()}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+              </div>
+
+              <div className="glass-card rounded-xl p-3">
+                <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold mb-1">
+                  Created by
+                </p>
+                <p className="text-sm text-white/80">
+                  {sprintSelected?.idusercreator ? getMemberName(sprintSelected.idusercreator) : '-'}
+                </p>
+              </div>
+
+              <div className="glass-card rounded-xl p-3">
                 <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold mb-1">
                   Short description
                 </p>
-                <p className="text-sm text-white/75 leading-relaxed">
-                  {sprintSelected?.shortdescription || '—'}
+                <p className="text-sm text-white/80 leading-relaxed">
+                  {sprintSelected?.shortdescription || '-'}
                 </p>
               </div>
+
               <div className="glass-card rounded-xl p-3">
-                <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold mb-1">
+                <p className="text-[10px] text-white/45 uppercase tracking-wider font-semibold mb-1.5">
                   Long description
                 </p>
-                <p className="text-sm text-white/75 leading-relaxed">
-                  {sprintSelected?.longdescription || '—'}
+                <p className="text-sm text-white/80 leading-relaxed">
+                  {sprintSelected?.longdescription || '-'}
                 </p>
               </div>
             </div>

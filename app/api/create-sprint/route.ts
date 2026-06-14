@@ -8,6 +8,9 @@ export async function POST(req: NextRequest) {
   try {
     const body: SprintType = await req.json()
 
+    const leader = body.iduseraffected ?? body.idusercreator ?? null
+    const members = body.members?.length ? body.members : (leader ? [leader] : [])
+
     const { error: insertError } = await supabase.from('sprint').insert({
       tag: body.tag,
       title: body.title,
@@ -15,9 +18,10 @@ export async function POST(req: NextRequest) {
       startdate: body.startdate,
       enddate: body.enddate,
       longdescription: body.longdescription,
-      history: '',
+      history: JSON.stringify({ members }),
       idscrumstep: Number(body.idscrumstep),
-      iduseraffected: body.iduseraffected,
+      iduseraffected: leader,
+      idusercreator: body.idusercreator,
     })
 
     if (insertError) {

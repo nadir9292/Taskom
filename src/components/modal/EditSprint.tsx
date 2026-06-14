@@ -1,19 +1,20 @@
 import React, { useEffect, useState, FormEvent } from 'react'
 import axios from 'axios'
 import SnackBar from '@/src/components/utils/SnackBar'
-import { SprintType } from '@/src/types/SprintType'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
 import { SnackBarStatus } from '@/src/types/SnackBarStatus'
 import { useApiRoutes } from '@/src/contexts/ApiContext'
 import AnimatedModal from '@/src/components/utils/AnimatedModal'
 import { XMarkIcon, StarIcon } from '@heroicons/react/24/outline'
 import { StarIcon as StarSolid } from '@heroicons/react/24/solid'
+import { useSelectContext } from '@/src/contexts/SelectedContext'
+import { SprintType } from '@/src/types/SprintType'
 
 type Props = {
   idUser: number
   scrumsteps: ScrumStepType[]
   isOpen: boolean
-  closeCreateModal: () => void
+  closeEditModal: () => void
 }
 
 const tags = [
@@ -22,19 +23,10 @@ const tags = [
   'Security', 'Documentation', 'DevOps', 'Review', 'Hotfix', 'WIP', 'Done', 'Blocked',
 ]
 
-const CreateSprint = ({ idUser, scrumsteps, isOpen, closeCreateModal }: Props) => {
+const EditSprint = ({ idUser, scrumsteps, isOpen, closeEditModal }: Props) => {
   const { refreshData, myTeam } = useApiRoutes()
-  const [sprintForm, setSprintForm] = useState<SprintType>({
-    tag: '',
-    title: '',
-    shortdescription: '',
-    longdescription: '',
-    startdate: new Date(),
-    enddate: new Date(),
-    idscrumstep: null,
-    iduseraffected: idUser,
-    members: [idUser],
-  })
+  const { sprintSelected } = useSelectContext()
+  const [sprintForm, setSprintForm] = useState<SprintType>({})
   const [sortedSteps, setSortedSteps] = useState<ScrumStepType[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [snackBar, setSnackBar] = useState<{
@@ -50,12 +42,13 @@ const CreateSprint = ({ idUser, scrumsteps, isOpen, closeCreateModal }: Props) =
   }, [scrumsteps])
 
   useEffect(() => {
-    setSprintForm((prev) => ({
-      ...prev,
-      iduseraffected: idUser,
-      members: prev.members?.includes(idUser) ? prev.members : [idUser, ...(prev.members ?? [])],
-    }))
-  }, [idUser])
+    if (sprintSelected) {
+      const members = sprintSelected.members?.length
+        ? sprintSelected.members
+        : sprintSelected.iduseraffected ? [sprintSelected.iduseraffected] : []
+      setSprintForm({ ...sprintSelected, members })
+    }
+  }, [sprintSelected])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -94,48 +87,31 @@ const CreateSprint = ({ idUser, scrumsteps, isOpen, closeCreateModal }: Props) =
         error: { active: false, message: null },
         success: { active: false, message: null },
       })
-      closeCreateModal()
+      closeEditModal()
     }, 3000)
   }
 
-  const resetForm = () => {
-    setSprintForm({
-      enddate: new Date(),
-      history: null,
-      idscrumstep: null,
-      idsprint: null,
-      iduseraffected: idUser,
-      longdescription: null,
-      shortdescription: null,
-      startdate: new Date(),
-      tag: null,
-      title: null,
-      members: [idUser],
-    })
+  const toDateString = (date: Date | undefined) => {
+    if (!date) return ''
+    return new Date(date).toISOString().split('T')[0]
   }
 
-  const createSprint = async (event: FormEvent) => {
+  const updateSprint = async (event: FormEvent) => {
     event.preventDefault()
-    if (!sprintForm.idscrumstep) return
-    if (!sprintForm.members?.length) return
+    if (!sprintForm.idscrumstep || !sprintForm.idsprint) return
     setIsLoading(true)
     try {
-      await axios.post('/api/create-sprint', {
-        ...sprintForm,
-        iduseraffected: sprintForm.iduseraffected ?? idUser,
-        idusercreator: idUser,
-      })
+      await axios.patch('/api/update-sprint', sprintForm)
       refreshData()
       setSnackBar((prev) => ({
         ...prev,
-        success: { message: 'Sprint created.', active: true },
+        success: { message: 'Sprint updated.', active: true },
       }))
-      resetForm()
       resetSnackBar()
     } catch {
       setSnackBar((prev) => ({
         ...prev,
-        error: { message: 'Failed to create sprint.', active: true },
+        error: { message: 'Failed to update sprint.', active: true },
       }))
       setTimeout(() => {
         setSnackBar((prev) => ({
@@ -151,19 +127,19 @@ const CreateSprint = ({ idUser, scrumsteps, isOpen, closeCreateModal }: Props) =
   if (!isOpen) return null
 
   return (
-    <AnimatedModal isOpen={isOpen} onClose={closeCreateModal}>
+    <AnimatedModal isOpen={isOpen} onClose={closeEditModal}>
       <button
         className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/8 transition-colors"
-        onClick={closeCreateModal}
+        onClick={closeEditModal}
       >
         <XMarkIcon className="w-5 h-5 text-white/60" />
       </button>
 
       <h1 className="text-center text-xl font-semibold text-white mb-5">
-        New Sprint
+        Edit Sprint
       </h1>
 
-      <form className="space-y-3" onSubmit={createSprint}>
+      <form className="space-y-3" onSubmit={updateSprint}>
         <select
           name="idscrumstep"
           className="glass-input"
@@ -277,7 +253,7 @@ const CreateSprint = ({ idUser, scrumsteps, isOpen, closeCreateModal }: Props) =
                 type="date"
                 name={field}
                 className="glass-input"
-                value={(sprintForm as any)[field]?.toISOString().split('T')[0]}
+                value={toDateString((sprintForm as any)[field])}
                 onChange={handleDateChange}
               />
             </div>
@@ -288,7 +264,7 @@ const CreateSprint = ({ idUser, scrumsteps, isOpen, closeCreateModal }: Props) =
           {isLoading ? (
             <span className="loading loading-dots loading-md" />
           ) : (
-            'Add sprint'
+            'Save changes'
           )}
         </button>
       </form>
@@ -298,4 +274,4 @@ const CreateSprint = ({ idUser, scrumsteps, isOpen, closeCreateModal }: Props) =
   )
 }
 
-export default CreateSprint
+export default EditSprint

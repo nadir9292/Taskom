@@ -6,4 +6,5 @@ export type UserType = {
   email?: string
   profileimage?: string
   idteam?: number
+  role?: string
 }

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated Background</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: #05060f;
+      font-family: 'Helvetica Neue', sans-serif;
+    }
+
+    .scene {
+      position: fixed;
+      inset: 0;
+    }
+
+    /* ── Grain ── */
+    .grain {
+      position: absolute;
+      inset: -50%;
+      width: 200%; height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      animation: grain-shift 8s steps(10) infinite;
+      pointer-events: none;
+    }
+
+    @keyframes grain-shift {
+      0%  { transform: translate(0, 0); }
+      10% { transform: translate(-2%, -3%); }
+      20% { transform: translate(3%, 1%); }
+      30% { transform: translate(-1%, 4%); }
+      40% { transform: translate(4%, -2%); }
+      50% { transform: translate(-3%, 0%); }
+      60% { transform: translate(2%, 3%); }
+      70% { transform: translate(-4%, -1%); }
+      80% { transform: translate(1%, -4%); }
+      90% { transform: translate(-2%, 2%); }
+      100%{ transform: translate(0, 0); }
+    }
+
+    /* ── Orbs ── */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      will-change: transform;
+      mix-blend-mode: screen;
+    }
+
+    .orb-1 {
+      width: 55vw; height: 55vw;
+      top: -15%; left: -10%;
+      background: radial-gradient(circle, #3d2fa0 0%, transparent 70%);
+      animation: drift-1 18s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 45vw; height: 45vw;
+      top: 30%; right: -10%;
+      background: radial-gradient(circle, #0e7a72 0%, transparent 70%);
+      animation: drift-2 22s ease-in-out infinite;
+    }
+
+    .orb-3 {
+      width: 40vw; height: 40vw;
+      bottom: -10%; left: 20%;
+      background: radial-gradient(circle, #6b1a8e 0%, transparent 70%);
+      animation: drift-3 26s ease-in-out infinite;
+    }
+
+    .orb-4 {
+      width: 30vw; height: 30vw;
+      top: 10%; right: 25%;
+      background: radial-gradient(circle, #c47a00 0%, transparent 70%);
+      opacity: 0.35;
+      animation: drift-4 20s ease-in-out infinite;
+    }
+
+    .orb-5 {
+      width: 25vw; height: 25vw;
+      bottom: 15%; right: 5%;
+      background: radial-gradient(circle, #1a4a9e 0%, transparent 70%);
+      animation: drift-5 24s ease-in-out infinite;
+    }
+
+    @keyframes drift-1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(6vw, 4vh) scale(1.08); }
+      66%       { transform: translate(-3vw, 8vh) scale(0.95); }
+    }
+    @keyframes drift-2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      40%       { transform: translate(-5vw, -6vh) scale(1.1); }
+      70%       { transform: translate(3vw, -3vh) scale(0.92); }
+    }
+    @keyframes drift-3 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      30%       { transform: translate(4vw, -5vh) scale(1.06); }
+      60%       { transform: translate(-6vw, -2vh) scale(0.96); }
+    }
+    @keyframes drift-4 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50%       { transform: translate(-4vw, 6vh) scale(1.12); }
+    }
+    @keyframes drift-5 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      45%       { transform: translate(-5vw, -4vh) scale(1.05); }
+      75%       { transform: translate(3vw, 3vh) scale(0.9); }
+    }
+
+    /* ── Vignette ── */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(2, 3, 10, 0.85) 100%);
+      pointer-events: none;
+    }
+
+    /* ── Demo text ── */
+    .content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: rgba(255,255,255,0.88);
+      letter-spacing: 0.15em;
+      text-align: center;
+      gap: 0.6rem;
+    }
+
+    .content h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 200;
+      text-transform: uppercase;
+    }
+
+    .content span {
+      font-size: clamp(0.75rem, 1.5vw, 1rem);
+      opacity: 0.45;
+      font-weight: 300;
+    }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="orb orb-5"></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+  </div>
+
+  <div class="content">
+    <h1>Taskom</h1>
+    <span>Remplacez ce contenu par le vôtre</span>
+  </div>
+</body>
+</html>

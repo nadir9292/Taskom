@@ -10,19 +10,25 @@ const Loading = () => {
 
   return (
     <div
-      className="fixed inset-0 w-screen overflow-y-auto backdrop-blur-xl"
-      style={{ zIndex: 100 }}
+      className="fixed inset-0 w-screen flex flex-col items-center justify-center"
+      style={{
+        zIndex: 100,
+        backdropFilter: 'blur(20px)',
+        background: 'rgba(6, 6, 26, 0.75)',
+      }}
     >
-      <div className="text-center mt-36">
+      <div className="text-center animate-fade-in-up">
         <Image
-          className="animate-spin mx-auto"
+          className="animate-spin mx-auto opacity-90"
           src="/loading_logo.png"
-          alt="loading image"
-          width={150}
-          height={150}
+          alt="loading"
+          width={56}
+          height={56}
           priority
         />
-        <h1 className="mt-6 text-3xl animate-pulse font-bold">Loading...</h1>
+        <p className="mt-5 text-sm font-medium text-white/50 tracking-wider uppercase">
+          Loading
+        </p>
       </div>
     </div>
   )

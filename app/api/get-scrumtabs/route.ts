@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
 
     const sprintResults = await Promise.all(sprintFetches)
 
-    const sprints = []
+    const rawSprints = []
     for (const result of sprintResults) {
       if (result.error) {
         return NextResponse.json(
@@ -43,8 +43,20 @@ export async function GET(req: NextRequest) {
           { status: 500 }
         )
       }
-      sprints.push(...(result.data || []))
+      rawSprints.push(...(result.data || []))
     }
+
+    const sprints = rawSprints.map((sprint) => {
+      let members: number[] = []
+      try {
+        const parsed = JSON.parse(sprint.history || '{}')
+        if (Array.isArray(parsed.members)) members = parsed.members
+      } catch {}
+      if (members.length === 0 && sprint.iduseraffected) {
+        members = [sprint.iduseraffected]
+      }
+      return { ...sprint, members }
+    })
 
     return NextResponse.json(
       { scrumtabs, scrumsteps, sprints },

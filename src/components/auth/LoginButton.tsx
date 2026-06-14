@@ -4,17 +4,21 @@ import { signIn } from 'next-auth/react'
 
 const LoginButton = () => {
   return (
-    <div className="flex flex-col gap-3 max-w-sm md:max-w-md mx-auto mt-8">
+    <div
+      className="flex flex-col gap-3 max-w-xs md:max-w-sm mx-auto mt-10 animate-fade-in-up"
+      style={{ animationDelay: '0.25s' }}
+    >
       <button
         onClick={() => signIn('github')}
-        className="glass-strong flex items-center justify-center gap-3 w-full py-3.5 rounded-2xl text-white/90 text-sm font-medium hover:bg-white/12 transition-all"
+        className="group glass-strong flex items-center justify-center gap-3 w-full py-4 rounded-2xl text-white/90 text-sm font-medium transition-all duration-300 hover:bg-white/14 hover:border-white/22 hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] hover:-translate-y-0.5 active:translate-y-0"
       >
         <svg
           aria-label="GitHub logo"
-          width="20"
-          height="20"
+          width="18"
+          height="18"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
+          className="opacity-80 group-hover:opacity-100 transition-opacity"
         >
           <path
             fill="white"
@@ -26,14 +30,15 @@ const LoginButton = () => {
 
       <button
         onClick={() => signIn('google')}
-        className="glass flex items-center justify-center gap-3 w-full py-3.5 rounded-2xl text-white/90 text-sm font-medium hover:bg-white/10 transition-all"
+        className="group glass flex items-center justify-center gap-3 w-full py-4 rounded-2xl text-white/85 text-sm font-medium transition-all duration-300 hover:bg-white/12 hover:border-white/18 hover:shadow-[0_8px_30px_rgba(0,0,0,0.35)] hover:-translate-y-0.5 active:translate-y-0"
       >
         <svg
           aria-label="Google logo"
-          width="20"
-          height="20"
+          width="18"
+          height="18"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"
+          className="opacity-85 group-hover:opacity-100 transition-opacity"
         >
           <g>
             <path d="m0 0H512V512H0" fill="transparent" />
@@ -45,6 +50,10 @@ const LoginButton = () => {
         </svg>
         Continue with Google
       </button>
+
+      <p className="text-center text-xs text-white/28 mt-1">
+        By signing in you agree to our terms of service.
+      </p>
     </div>
   )
 }

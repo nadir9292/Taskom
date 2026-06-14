@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   try {
     const { data, error } = await supabase
       .from('User')
-      .select('iduser, firstname, lastname, profileimage, job')
+      .select('iduser, firstname, lastname, profileimage, job, role')
       .eq('idteam', idteam)
 
     if (error) throw error

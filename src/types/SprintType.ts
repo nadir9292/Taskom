@@ -9,4 +9,6 @@ export type SprintType = {
   history?: string | null
   idscrumstep?: number | null
   iduseraffected?: number | null
+  idusercreator?: number | null
+  members?: number[]
 }

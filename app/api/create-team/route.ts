@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
       .from('User')
       .update({
         idteam: teamData.idteam,
+        role: 'leader',
       })
       .eq('iduser', data.idleader)
 
