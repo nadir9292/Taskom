@@ -4,9 +4,9 @@ import type { Metadata } from 'next'
 import React from 'react'
 
 export const metadata: Metadata = {
-  title: 'Connexion / Login',
+  title: 'Connexion',
   description:
-    "Connectez-vous à Taskom pour gérer vos projets Scrum : sprints, backlog et équipes. Sign in to Taskom to manage your Scrum projects: sprints, backlog and teams.",
+    "Connectez-vous à Flowboro, le kanban open source, pour gérer vos tableaux et vos sprints : backlog, étapes et équipes dans un seul flux.",
   alternates: {
     canonical: '/login',
   },

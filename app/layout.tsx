@@ -1,45 +1,45 @@
 import RootLayoutClient from '@/app/RootLayoutClient'
 import type { Metadata, Viewport } from 'next'
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://taskom.app'
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://flowboro.app'
 
-const title = 'Taskom — Outil de gestion de projet Scrum / Scrum Project Management'
+const title =
+  'Flowboro — Logiciel kanban open source pour équipes agiles'
 const description =
-  "Taskom est un outil de gestion de projet spécialisé Scrum : sprints, backlog, équipes et tableaux pour organiser vos projets agiles. Taskom is a Scrum-focused project management tool: sprints, backlog, teams and boards to run your agile projects."
+  "Flowboro est le logiciel kanban open source qui réunit tableaux visuels et sprints agiles. Gratuit, auto-hébergeable et entièrement transparent : un outil de gestion de projet que vous contrôlez vraiment, sans vendor lock-in."
 
 const keywords = [
-  'Taskom',
-  'Scrum',
-  'gestion de projet',
-  'project management',
-  'agile',
-  'sprint',
-  'backlog',
-  'scrum board',
-  'tableau scrum',
-  'gestion de sprint',
+  'Flowboro',
+  'logiciel kanban open source',
+  'kanban open source',
+  'kanban auto-hébergé',
+  'outil de gestion de projet open source',
+  'alternative open source à un outil de gestion par tableaux',
+  'tableau kanban en ligne',
+  'gestion de sprint open source',
+  'logiciel de gestion de projet agile',
+  'gestion de projet agile',
   'sprint planning',
   'product backlog',
-  'gestion agile',
-  'agile project management',
-  'collaboration équipe',
+  'tableau de tâches pour équipe',
+  'self-hosted kanban',
   'team collaboration',
-  'kanban',
-  'outil scrum',
+  'kanban board',
+  'outil scrum open source',
 ]
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: title,
-    template: '%s | Taskom',
+    template: '%s | Flowboro',
   },
   description,
   keywords,
-  applicationName: 'Taskom',
-  authors: [{ name: 'Taskom' }],
-  creator: 'Taskom',
-  publisher: 'Taskom',
+  applicationName: 'Flowboro',
+  authors: [{ name: 'Flowboro' }],
+  creator: 'Flowboro',
+  publisher: 'Flowboro',
   category: 'productivity',
   generator: 'Next.js',
   referrer: 'origin-when-cross-origin',
@@ -52,24 +52,22 @@ export const metadata: Metadata = {
     canonical: '/',
     languages: {
       'fr-FR': '/',
-      'en-US': '/',
       'x-default': '/',
     },
   },
   openGraph: {
     type: 'website',
-    siteName: 'Taskom',
+    siteName: 'Flowboro',
     title,
     description,
     url: siteUrl,
     locale: 'fr_FR',
-    alternateLocale: ['en_US'],
   },
   twitter: {
     card: 'summary_large_image',
     title,
     description,
-    creator: '@taskom',
+    creator: '@flowboro',
   },
   robots: {
     index: true,

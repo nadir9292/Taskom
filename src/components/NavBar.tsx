@@ -19,17 +19,23 @@ const NavBar = () => {
     setMounted(true)
   }, [])
 
-  if (!mounted || !session || status !== 'authenticated') return null
+  const appPaths = ['/dashboard', '/my-team', '/my-profile']
+  const isAppPage = appPaths.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`)
+  )
+
+  if (!mounted || !session || status !== 'authenticated' || !isAppPage)
+    return null
 
   return (
     <>
       {/* Desktop top nav */}
       <div className="hidden sm:flex w-[95vw] mx-auto mt-4 glass rounded-2xl px-5 py-3 items-center justify-between animate-fade-in-up">
         <Link
-          href="/"
+          href="/dashboard"
           className="text-[17px] font-semibold tracking-tight text-white hover:text-white/90 transition-colors"
         >
-          Taskom
+          Flowboro
         </Link>
 
         <div className="flex items-center gap-2.5">
@@ -80,7 +86,7 @@ const NavBar = () => {
       <div className="sm:hidden fixed bottom-5 left-1/2 -translate-x-1/2 w-[92vw] p-1.5 flex justify-between items-center glass rounded-2xl z-10">
         {[
           { path: '/my-team', icon: UsersIcon, label: 'My team' },
-          { path: '/', icon: HomeIcon, label: 'Home' },
+          { path: '/dashboard', icon: HomeIcon, label: 'Home' },
         ].map(({ path, icon: Icon, label }) => (
           <button
             key={path}

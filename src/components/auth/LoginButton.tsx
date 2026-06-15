@@ -9,7 +9,7 @@ const LoginButton = () => {
       style={{ animationDelay: '0.25s' }}
     >
       <button
-        onClick={() => signIn('github')}
+        onClick={() => signIn('github', { callbackUrl: '/dashboard' })}
         className="group glass-strong flex items-center justify-center gap-3 w-full py-4 rounded-2xl text-white/90 text-sm font-medium transition-all duration-300 hover:bg-white/14 hover:border-white/22 hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] hover:-translate-y-0.5 active:translate-y-0"
       >
         <svg
@@ -29,7 +29,7 @@ const LoginButton = () => {
       </button>
 
       <button
-        onClick={() => signIn('google')}
+        onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
         className="group glass flex items-center justify-center gap-3 w-full py-4 rounded-2xl text-white/85 text-sm font-medium transition-all duration-300 hover:bg-white/12 hover:border-white/18 hover:shadow-[0_8px_30px_rgba(0,0,0,0.35)] hover:-translate-y-0.5 active:translate-y-0"
       >
         <svg

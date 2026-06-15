@@ -70,7 +70,7 @@ const InvitePage = ({ params }: Props) => {
     return (
       <div className="flex flex-col items-center mt-20 gap-4">
         <p className="text-red-400 text-lg">{error}</p>
-        <button className="btn btn-primary" onClick={() => router.push('/')}>
+        <button className="btn btn-primary" onClick={() => router.push('/dashboard')}>
           Retour à l&apos;accueil
         </button>
       </div>

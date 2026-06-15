@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 
-export const alt = 'Taskom — Outil de gestion de projet Scrum'
+export const alt = 'Flowboro — Kanban open source pour équipes'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -22,13 +22,13 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ fontSize: 120, fontWeight: 700, letterSpacing: '-4px' }}>
-          Taskom
+          Flowboro
         </div>
         <div style={{ fontSize: 44, fontWeight: 500, marginTop: 16 }}>
-          Gestion de projet Scrum
+          Le kanban open source pour équipes
         </div>
         <div style={{ fontSize: 30, opacity: 0.8, marginTop: 24, maxWidth: 900 }}>
-          Sprints, backlog, équipes et tableaux pour vos projets agiles.
+          Gratuit, auto-hébergeable et transparent.
         </div>
       </div>
     ),

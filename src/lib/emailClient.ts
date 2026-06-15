@@ -1,6 +1,6 @@
 const RESEND_API_KEY = process.env.RESEND_API_KEY!
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'
-const FROM_EMAIL = 'Taskom <noreply@taskom.app>'
+const FROM_EMAIL = 'Flowboro <noreply@flowboro.app>'
 
 async function sendEmail(to: string, subject: string, html: string) {
   const res = await fetch('https://api.resend.com/emails', {
@@ -22,7 +22,7 @@ export async function sendInviteEmail(to: string, teamName: string, token: strin
   const inviteUrl = `${APP_URL}/invite/${token}`
   await sendEmail(
     to,
-    `Invitation à rejoindre ${teamName} sur Taskom`,
+    `Invitation à rejoindre ${teamName} sur Flowboro`,
     `
       <div style="font-family: sans-serif; max-width: 480px; margin: auto;">
         <h2>Tu as été invité à rejoindre <strong>${teamName}</strong></h2>
@@ -40,10 +40,10 @@ export async function sendRegisterAndInviteEmail(to: string, teamName: string, t
   const inviteUrl = `${APP_URL}/invite/${token}`
   await sendEmail(
     to,
-    `Rejoins ${teamName} sur Taskom`,
+    `Rejoins ${teamName} sur Flowboro`,
     `
       <div style="font-family: sans-serif; max-width: 480px; margin: auto;">
-        <h2>Tu as été invité à rejoindre <strong>${teamName}</strong> sur Taskom</h2>
+        <h2>Tu as été invité à rejoindre <strong>${teamName}</strong> sur Flowboro</h2>
         <p>Pour accepter l'invitation, crée d'abord un compte, puis clique sur ce lien :</p>
         <a href="${inviteUrl}" style="display:inline-block;padding:12px 24px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;">
           Créer un compte et rejoindre l'équipe

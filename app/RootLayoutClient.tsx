@@ -14,23 +14,29 @@ const montserrat = Montserrat({
   display: 'swap',
 })
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://taskom.app'
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://flowboro.app'
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'Taskom',
+  name: 'Flowboro',
   url: siteUrl,
   applicationCategory: 'BusinessApplication',
   applicationSubCategory: 'Project Management',
   operatingSystem: 'Web',
   description:
-    'Taskom est un outil de gestion de projet spécialisé Scrum : sprints, backlog, équipes et tableaux pour vos projets agiles.',
-  inLanguage: ['fr', 'en'],
+    'Flowboro est un logiciel kanban pour équipes qui réunit tableaux visuels et sprints agiles. Une alternative simple aux outils de gestion de projet par tableaux.',
+  inLanguage: 'fr',
   offers: {
     '@type': 'Offer',
     price: '0',
     priceCurrency: 'EUR',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Flowboro',
+    url: siteUrl,
+    logo: `${siteUrl}/icon-512x512.png`,
   },
 }
 

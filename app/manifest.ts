@@ -2,10 +2,10 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Taskom — Gestion de projet Scrum',
-    short_name: 'Taskom',
+    name: 'Flowboro — Kanban open source pour équipes',
+    short_name: 'Flowboro',
     description:
-      'Outil de gestion de projet spécialisé Scrum : sprints, backlog, équipes et tableaux pour vos projets agiles.',
+      'Kanban open source, gratuit et auto-hébergeable : tableaux visuels, sprints et backlog pour vos projets agiles.',
     start_url: '/',
     scope: '/',
     display: 'standalone',

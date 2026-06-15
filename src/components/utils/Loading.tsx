@@ -1,12 +1,14 @@
 import { useApiRoutes } from '@/src/contexts/ApiContext'
 import Image from 'next/image'
+import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 
 const Loading = () => {
   const pathname = usePathname()
   const { user } = useApiRoutes()
+  const { status } = useSession()
 
-  if (Object.keys(user!).length > 0 || pathname === '/login') return
+  if (Object.keys(user!).length > 0 || pathname === '/login' || status === 'unauthenticated') return
 
   return (
     <div
