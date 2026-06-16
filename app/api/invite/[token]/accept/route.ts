@@ -1,11 +1,17 @@
 import { supabase } from '@/src/lib/supabaseClient'
+import { authOptions } from '@/src/lib/authOptions'
+import { getServerSession } from 'next-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ token: string }> }) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.email) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+  }
+
   const { token } = await params
-  const { userEmail } = await req.json()
 
   const { data: invitation, error } = await supabase
     .from('TeamInvitation')
@@ -25,14 +31,14 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
     return NextResponse.json({ message: 'Invitation expirée' }, { status: 400 })
   }
 
-  if (invitation.email !== userEmail) {
+  if (invitation.email !== session.user.email) {
     return NextResponse.json({ message: "Cette invitation ne t'est pas destinée" }, { status: 403 })
   }
 
   const { data: user, error: userError } = await supabase
     .from('User')
     .select('iduser, idteam')
-    .eq('email', userEmail)
+    .eq('email', session.user.email)
     .single()
 
   if (userError || !user) {

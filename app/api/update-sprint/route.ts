@@ -1,10 +1,17 @@
 import { supabase } from '@/src/lib/supabaseClient'
+import { authOptions } from '@/src/lib/authOptions'
 import { SprintType } from '@/src/types/SprintType'
+import { getServerSession } from 'next-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
 export async function PATCH(req: NextRequest) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.email) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+  }
+
   try {
     const body: SprintType = await req.json()
 
