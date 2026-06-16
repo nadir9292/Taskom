@@ -68,7 +68,7 @@ const RootLayoutClient = ({
             <ApiRoutesProvider>
               <Loading />
               <NavBar />
-              <main className="pb-28 sm:pb-4">
+              <main className="pb-8">
                 {children}
               </main>
             </ApiRoutesProvider>

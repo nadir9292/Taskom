@@ -5,7 +5,7 @@ import { ScrumStepType } from '@/src/types/ScrumStepType'
 import { SnackBarStatus } from '@/src/types/SnackBarStatus'
 import { useApiRoutes } from '@/src/contexts/ApiContext'
 import AnimatedModal from '@/src/components/utils/AnimatedModal'
-import { XMarkIcon, StarIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, StarIcon, PencilSquareIcon } from '@heroicons/react/24/outline'
 import { StarIcon as StarSolid } from '@heroicons/react/24/solid'
 import { useSelectContext } from '@/src/contexts/SelectedContext'
 import { SprintType } from '@/src/types/SprintType'
@@ -127,7 +127,7 @@ const EditSprint = ({ idUser, scrumsteps, isOpen, closeEditModal }: Props) => {
   if (!isOpen) return null
 
   return (
-    <AnimatedModal isOpen={isOpen} onClose={closeEditModal}>
+    <AnimatedModal isOpen={isOpen} onClose={closeEditModal} variant="edit">
       <button
         className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/8 transition-colors"
         onClick={closeEditModal}
@@ -135,9 +135,10 @@ const EditSprint = ({ idUser, scrumsteps, isOpen, closeEditModal }: Props) => {
         <XMarkIcon className="w-5 h-5 text-white/60" />
       </button>
 
-      <h1 className="text-center text-xl font-semibold text-white mb-5">
-        Edit Sprint
-      </h1>
+      <div className="flex items-center justify-center gap-2 mb-5">
+        <PencilSquareIcon className="w-5 h-5 text-amber-400" />
+        <h1 className="text-xl font-semibold text-white">Edit Sprint</h1>
+      </div>
 
       <form className="space-y-3" onSubmit={updateSprint}>
         <select
@@ -260,7 +261,7 @@ const EditSprint = ({ idUser, scrumsteps, isOpen, closeEditModal }: Props) => {
           ))}
         </div>
 
-        <button className="btn-violet btn-violet-lg">
+        <button className="btn-amber btn-action-lg">
           {isLoading ? (
             <span className="loading loading-dots loading-md" />
           ) : (

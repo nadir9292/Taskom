@@ -4,6 +4,7 @@ import { ScrumStepType } from '@/src/types/ScrumStepType'
 import { ScrumTabType } from '@/src/types/ScrumTabType'
 import { SprintType } from '@/src/types/SprintType'
 import { UserType } from '@/src/types/UserType'
+import { secureFetch, resetKey } from '@/src/lib/clientCrypto'
 import { useSession } from 'next-auth/react'
 import {
   createContext,
@@ -44,30 +45,24 @@ export const ApiRoutesProvider = ({ children }: ApiRoutesProviderProps) => {
 
   useEffect(() => {
     if (!session || status !== 'authenticated') return
+    resetKey()
     let isMounted = true
 
     const fetchAllData = async () => {
       try {
-        const userRes = await fetch(
+        const userData = await secureFetch<UserType>(
           `/api/get-user?email=${session.user?.email}`
         )
-        if (!userRes.ok) throw new Error('Failed to fetch user')
-        const userData: UserType = await userRes.json()
 
         if (!isMounted) return
         setUser(userData)
 
         if (userData?.idteam) {
-          const [teamRes, scrumtabRes] = await Promise.all([
-            fetch(`/api/get-my-team?idteam=${userData.idteam}`),
-            fetch(`/api/get-scrumtabs?idteam=${userData.idteam}`),
-          ])
-
-          if (!teamRes.ok || !scrumtabRes.ok) throw new Error('Failed to fetch team data')
-
           const [teamData, scrumtabData] = await Promise.all([
-            teamRes.json(),
-            scrumtabRes.json(),
+            secureFetch<UserType[]>(`/api/get-my-team?idteam=${userData.idteam}`),
+            secureFetch<{ scrumtabs: ScrumTabType[]; scrumsteps: ScrumStepType[]; sprints: SprintType[] }>(
+              `/api/get-scrumtabs?idteam=${userData.idteam}`
+            ),
           ])
 
           if (!isMounted) return
@@ -89,22 +84,17 @@ export const ApiRoutesProvider = ({ children }: ApiRoutesProviderProps) => {
   const refreshData = async () => {
     try {
       if (!session) return
-      const userRes = await fetch(`/api/get-user?email=${session.user?.email}`)
-      if (!userRes.ok) throw new Error('Failed to fetch user')
-      const userData: UserType = await userRes.json()
+      const userData = await secureFetch<UserType>(
+        `/api/get-user?email=${session.user?.email}`
+      )
       setUser(userData)
 
       if (userData?.idteam) {
-        const [teamRes, scrumtabRes] = await Promise.all([
-          fetch(`/api/get-my-team?idteam=${userData.idteam}`),
-          fetch(`/api/get-scrumtabs?idteam=${userData.idteam}`),
-        ])
-
-        if (!teamRes.ok || !scrumtabRes.ok) throw new Error('Failed to fetch team data')
-
         const [teamData, scrumtabData] = await Promise.all([
-          teamRes.json(),
-          scrumtabRes.json(),
+          secureFetch<UserType[]>(`/api/get-my-team?idteam=${userData.idteam}`),
+          secureFetch<{ scrumtabs: ScrumTabType[]; scrumsteps: ScrumStepType[]; sprints: SprintType[] }>(
+            `/api/get-scrumtabs?idteam=${userData.idteam}`
+          ),
         ])
 
         setMyTeam(teamData)

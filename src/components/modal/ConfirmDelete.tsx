@@ -1,5 +1,5 @@
 import AnimatedModal from '@/src/components/utils/AnimatedModal'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, TrashIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 
 type Props = {
@@ -12,7 +12,7 @@ const ConfirmDelete = ({ isOpen, closeCreateModal, confirmDeletion }: Props) => 
   if (!isOpen) return null
 
   return (
-    <AnimatedModal isOpen={isOpen} onClose={closeCreateModal}>
+    <AnimatedModal isOpen={isOpen} onClose={closeCreateModal} variant="delete">
       <button
         className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/8 transition-colors"
         onClick={closeCreateModal}
@@ -20,9 +20,15 @@ const ConfirmDelete = ({ isOpen, closeCreateModal, confirmDeletion }: Props) => 
         <XMarkIcon className="w-5 h-5 text-white/60" />
       </button>
 
-      <h1 className="text-center text-lg font-semibold text-white mt-4 mb-6">
-        Delete this sprint?
-      </h1>
+      <div className="flex flex-col items-center gap-3 mt-4 mb-6">
+        <div className="p-3 rounded-full bg-red-500/15 border border-red-500/25">
+          <TrashIcon className="w-6 h-6 text-red-400" />
+        </div>
+        <h1 className="text-center text-lg font-semibold text-white">
+          Delete this sprint?
+        </h1>
+        <p className="text-xs text-white/40 text-center">This action cannot be undone.</p>
+      </div>
 
       <div className="flex gap-3">
         <button

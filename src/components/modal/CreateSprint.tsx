@@ -6,7 +6,7 @@ import { ScrumStepType } from '@/src/types/ScrumStepType'
 import { SnackBarStatus } from '@/src/types/SnackBarStatus'
 import { useApiRoutes } from '@/src/contexts/ApiContext'
 import AnimatedModal from '@/src/components/utils/AnimatedModal'
-import { XMarkIcon, StarIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, StarIcon, PlusCircleIcon } from '@heroicons/react/24/outline'
 import { StarIcon as StarSolid } from '@heroicons/react/24/solid'
 
 type Props = {
@@ -151,7 +151,7 @@ const CreateSprint = ({ idUser, scrumsteps, isOpen, closeCreateModal }: Props) =
   if (!isOpen) return null
 
   return (
-    <AnimatedModal isOpen={isOpen} onClose={closeCreateModal}>
+    <AnimatedModal isOpen={isOpen} onClose={closeCreateModal} variant="create">
       <button
         className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/8 transition-colors"
         onClick={closeCreateModal}
@@ -159,9 +159,10 @@ const CreateSprint = ({ idUser, scrumsteps, isOpen, closeCreateModal }: Props) =
         <XMarkIcon className="w-5 h-5 text-white/60" />
       </button>
 
-      <h1 className="text-center text-xl font-semibold text-white mb-5">
-        New Sprint
-      </h1>
+      <div className="flex items-center justify-center gap-2 mb-5">
+        <PlusCircleIcon className="w-5 h-5 text-emerald-400" />
+        <h1 className="text-xl font-semibold text-white">New Sprint</h1>
+      </div>
 
       <form className="space-y-3" onSubmit={createSprint}>
         <select
@@ -284,7 +285,7 @@ const CreateSprint = ({ idUser, scrumsteps, isOpen, closeCreateModal }: Props) =
           ))}
         </div>
 
-        <button className="btn-violet btn-violet-lg">
+        <button className="btn-emerald btn-action-lg">
           {isLoading ? (
             <span className="loading loading-dots loading-md" />
           ) : (

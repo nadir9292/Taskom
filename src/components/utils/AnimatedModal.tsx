@@ -1,13 +1,23 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { ReactNode } from 'react'
 
+type ModalVariant = 'create' | 'edit' | 'delete' | 'neutral'
+
 type AnimatedModalProps = {
   isOpen: boolean
   onClose: () => void
   children: ReactNode
+  variant?: ModalVariant
 }
 
-const AnimatedModal = ({ isOpen, onClose, children }: AnimatedModalProps) => {
+const accentClass: Record<ModalVariant, string> = {
+  create: 'modal-accent-create',
+  edit: 'modal-accent-edit',
+  delete: 'modal-accent-delete',
+  neutral: '',
+}
+
+const AnimatedModal = ({ isOpen, onClose, children, variant = 'neutral' }: AnimatedModalProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -24,7 +34,7 @@ const AnimatedModal = ({ isOpen, onClose, children }: AnimatedModalProps) => {
           onClick={onClose}
         >
           <motion.div
-            className="glass-strong p-6 w-full sm:max-w-md sm:w-[95vw] sm:mx-auto sm:mt-20 sm:rounded-2xl rounded-t-2xl relative flex flex-col max-h-[92vh] overflow-y-auto"
+            className={`glass-strong ${accentClass[variant]} p-6 w-full sm:max-w-md sm:w-[95vw] sm:mx-auto sm:mt-20 sm:rounded-2xl rounded-t-2xl relative flex flex-col max-h-[92vh] overflow-y-auto`}
             initial={{ y: 60, opacity: 0, scale: 0.97 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 40, opacity: 0, scale: 0.97 }}
