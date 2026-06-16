@@ -6,11 +6,14 @@ import TeamList from '@/src/components/TeamList'
 import { useApiRoutes } from '@/src/contexts/ApiContext'
 import axios from 'axios'
 import React, { useState } from 'react'
+import ConfirmDelete from '@/src/components/modal/ConfirmDelete'
 
 const Page = () => {
   const { myTeam, user, refreshData } = useApiRoutes()
   const [isOpenModalCreateTeam, setIsOpenModalCreateTeam] = useState(false)
   const [isOpenAddMember, setIsOpenAddMember] = useState(false)
+  const [confirmLeave, setConfirmLeave] = useState(false)
+  const [confirmTransfer, setConfirmTransfer] = useState<number | null>(null)
 
   const removeMember = async (iduser: number) => {
     try {
@@ -19,6 +22,26 @@ const Page = () => {
     } catch (error) {
       console.error('Failed to remove member', error)
     }
+  }
+
+  const leaveTeam = async () => {
+    try {
+      await axios.patch('/api/leave-team', { iduser: user.iduser })
+      refreshData()
+    } catch {}
+  }
+
+  const transferLeadership = async () => {
+    if (!confirmTransfer || !user.iduser || !user.idteam) return
+    try {
+      await axios.patch('/api/transfer-leadership', {
+        currentLeaderId: user.iduser,
+        newLeaderId: confirmTransfer,
+        idteam: user.idteam,
+      })
+      refreshData()
+    } catch {}
+    setConfirmTransfer(null)
   }
 
   return (
@@ -31,6 +54,8 @@ const Page = () => {
               currentUser={user}
               onAddMember={() => setIsOpenAddMember(true)}
               onRemoveMember={removeMember}
+              onTransferLeadership={(iduser) => setConfirmTransfer(iduser)}
+              onLeaveTeam={() => setConfirmLeave(true)}
             />
             {user.role === 'leader' && (
               <AddMemberModal
@@ -61,6 +86,23 @@ const Page = () => {
       ) : (
         <div>Loading user...</div>
       )}
+
+      <ConfirmDelete
+        isOpen={confirmLeave}
+        closeCreateModal={() => setConfirmLeave(false)}
+        confirmDeletion={leaveTeam}
+        title="Leave the team?"
+        description="You will lose access to all team boards and sprints."
+        confirmLabel="Leave"
+      />
+      <ConfirmDelete
+        isOpen={!!confirmTransfer}
+        closeCreateModal={() => setConfirmTransfer(null)}
+        confirmDeletion={transferLeadership}
+        title="Transfer leadership?"
+        description="This member will become the new team leader."
+        confirmLabel="Transfer"
+      />
     </div>
   )
 }

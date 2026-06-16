@@ -32,5 +32,5 @@
     "src/contexts/ApiContext.tsx",
     "app/api/auth/[...nextauth]"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "tests", "smoke.test.ts"]
 }

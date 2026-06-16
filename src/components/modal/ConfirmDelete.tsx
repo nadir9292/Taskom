@@ -6,9 +6,19 @@ type Props = {
   isOpen: boolean
   closeCreateModal: () => void
   confirmDeletion: () => void
+  title?: string
+  description?: string
+  confirmLabel?: string
 }
 
-const ConfirmDelete = ({ isOpen, closeCreateModal, confirmDeletion }: Props) => {
+const ConfirmDelete = ({
+  isOpen,
+  closeCreateModal,
+  confirmDeletion,
+  title = 'Delete this sprint?',
+  description = 'This action cannot be undone.',
+  confirmLabel = 'Delete',
+}: Props) => {
   if (!isOpen) return null
 
   return (
@@ -24,17 +34,12 @@ const ConfirmDelete = ({ isOpen, closeCreateModal, confirmDeletion }: Props) => 
         <div className="p-3 rounded-full bg-red-500/15 border border-red-500/25">
           <TrashIcon className="w-6 h-6 text-red-400" />
         </div>
-        <h1 className="text-center text-lg font-semibold text-white">
-          Delete this sprint?
-        </h1>
-        <p className="text-xs text-white/40 text-center">This action cannot be undone.</p>
+        <h1 className="text-center text-lg font-semibold text-white">{title}</h1>
+        <p className="text-xs text-white/40 text-center">{description}</p>
       </div>
 
       <div className="flex gap-3">
-        <button
-          className="btn-glass flex-1 py-2.5"
-          onClick={closeCreateModal}
-        >
+        <button className="btn-glass flex-1 py-2.5" onClick={closeCreateModal}>
           Cancel
         </button>
         <button
@@ -44,7 +49,7 @@ const ConfirmDelete = ({ isOpen, closeCreateModal, confirmDeletion }: Props) => 
             confirmDeletion()
           }}
         >
-          Delete
+          {confirmLabel}
         </button>
       </div>
     </AnimatedModal>

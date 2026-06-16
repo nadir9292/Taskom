@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Bars3Icon, XMarkIcon, HomeIcon, UsersIcon, UserIcon } from '@heroicons/react/24/outline'
 import { brand, nav, githubUrl } from '@/src/content/site'
+import { motion } from 'framer-motion'
 
 const appPaths = ['/dashboard', '/my-team', '/my-profile']
 const noHeaderPaths = ['/login', '/invite']
@@ -83,13 +84,18 @@ const NavBar = () => {
               <Link
                 key={href}
                 href={href}
-                className={`px-3 py-2 text-sm rounded-lg transition-colors ${
-                  pathname === href
-                    ? 'text-white bg-white/10 border border-violet-400/20'
-                    : 'text-white/65 hover:text-white hover:bg-white/8'
+                className={`relative px-3 py-2 text-sm rounded-lg transition-colors ${
+                  pathname === href ? 'text-white' : 'text-white/65 hover:text-white'
                 }`}
               >
-                {label}
+                {pathname === href && (
+                  <motion.div
+                    layoutId="nav-pill"
+                    className="absolute inset-0 rounded-lg bg-white/10 border border-violet-400/20"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{label}</span>
               </Link>
             ))}
           </nav>

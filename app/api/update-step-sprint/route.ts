@@ -5,25 +5,37 @@ export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
   try {
-    const data = await req.json()
+    const { idsprint, idStep, fromTitle, toTitle } = await req.json()
+
+    const { data: current } = await supabase
+      .from('sprint')
+      .select('history')
+      .eq('idsprint', idsprint)
+      .single()
+
+    let parsed: { members?: number[]; steps?: { from: string; to: string; at: string }[] } = {}
+    try {
+      parsed = JSON.parse(current?.history || '{}')
+    } catch {}
+
+    const historySteps = parsed.steps ?? []
+    if (fromTitle && toTitle) {
+      historySteps.push({ from: fromTitle, to: toTitle, at: new Date().toISOString() })
+    }
 
     const { error } = await supabase
       .from('sprint')
       .update({
-        idscrumstep: data.idStep,
+        idscrumstep: idStep,
+        history: JSON.stringify({ ...parsed, steps: historySteps }),
       })
-      .eq('idsprint', data.idsprint)
+      .eq('idsprint', idsprint)
 
     if (error) throw error
 
-    return NextResponse.json('sprint status has been updated correctly', {
-      status: 200,
-    })
+    return NextResponse.json('sprint status has been updated correctly', { status: 200 })
   } catch (error) {
     console.error(error)
-    return NextResponse.json(
-      { message: 'Internal Server Error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 })
   }
 }

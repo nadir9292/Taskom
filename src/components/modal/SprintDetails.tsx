@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSelectContext } from '@/src/contexts/SelectedContext'
-import { XMarkIcon, StarIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, StarIcon, ClockIcon } from '@heroicons/react/24/outline'
 import { StarIcon as StarSolid } from '@heroicons/react/24/solid'
 import React, { useState } from 'react'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
@@ -15,13 +15,12 @@ type Props = {
   scrumSteps: ScrumStepType[]
 }
 
+type HistoryStep = { from: string; to: string; at: string }
+
 const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
   const { refreshData, myTeam, user } = useApiRoutes()
   const { sprintSelected, setSprintSelected } = useSelectContext()
-  const [snackBar, setSnackBar] = useState<{
-    error: SnackBarStatus
-    success: SnackBarStatus
-  }>({
+  const [snackBar, setSnackBar] = useState<{ error: SnackBarStatus; success: SnackBarStatus }>({
     error: { active: false, message: null },
     success: { active: false, message: null },
   })
@@ -79,10 +78,13 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
   }
 
   const updateSprintStep = async (step: ScrumStepType) => {
+    const currentStep = scrumSteps.find((s) => s.idscrumstep === sprintSelected?.idscrumstep)
     try {
       await axios.post('/api/update-step-sprint', {
         idsprint: sprintSelected?.idsprint,
         idStep: step.idscrumstep,
+        fromTitle: currentStep?.title,
+        toTitle: step.title,
       })
       await refreshData()
       showSuccess(`Moved to ${step.title}`)
@@ -91,11 +93,21 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
     }
   }
 
+  const getHistorySteps = (): HistoryStep[] => {
+    try {
+      const parsed = JSON.parse(sprintSelected?.history ?? '{}')
+      return Array.isArray(parsed.steps) ? parsed.steps : []
+    } catch {
+      return []
+    }
+  }
+
   if (!isOpen) return null
 
   const members = sprintSelected?.members ?? []
   const leaderId = sprintSelected?.iduseraffected
   const unassigned = myTeam.filter((m) => !members.includes(m.iduser!))
+  const historySteps = getHistorySteps()
 
   return (
     <AnimatePresence>
@@ -139,9 +151,7 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
 
             <div className="space-y-3 flex-1 overflow-y-auto">
               <div className="glass-card rounded-xl p-3">
-                <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold mb-2">
-                  Members
-                </p>
+                <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold mb-2">Members</p>
                 <div className="flex flex-wrap gap-2">
                   {members.map((iduser) => {
                     const isLeader = iduser === leaderId
@@ -181,9 +191,7 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
                     <select
                       className="text-xs px-2.5 py-1 rounded-lg border border-dashed border-white/20 bg-white/5 text-white/40 hover:text-white/60 transition-colors cursor-pointer"
                       value=""
-                      onChange={(e) => {
-                        if (e.target.value) handleAddMember(Number(e.target.value))
-                      }}
+                      onChange={(e) => { if (e.target.value) handleAddMember(Number(e.target.value)) }}
                     >
                       <option value="" disabled>+ Add member</option>
                       {unassigned.map((m) => (
@@ -197,37 +205,46 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
               </div>
 
               <div className="glass-card rounded-xl p-3">
-                <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold mb-1">
-                  Created by
-                </p>
+                <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold mb-1">Created by</p>
                 <p className="text-sm text-white/80">
                   {sprintSelected?.idusercreator ? getMemberName(sprintSelected.idusercreator) : '-'}
                 </p>
               </div>
 
               <div className="glass-card rounded-xl p-3">
-                <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold mb-1">
-                  Short description
-                </p>
-                <p className="text-sm text-white/80 leading-relaxed">
-                  {sprintSelected?.shortdescription || '-'}
-                </p>
+                <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold mb-1">Short description</p>
+                <p className="text-sm text-white/80 leading-relaxed">{sprintSelected?.shortdescription || '-'}</p>
               </div>
 
               <div className="glass-card rounded-xl p-3">
-                <p className="text-[10px] text-white/45 uppercase tracking-wider font-semibold mb-1.5">
-                  Long description
-                </p>
-                <p className="text-sm text-white/80 leading-relaxed">
-                  {sprintSelected?.longdescription || '-'}
-                </p>
+                <p className="text-[10px] text-white/45 uppercase tracking-wider font-semibold mb-1.5">Long description</p>
+                <p className="text-sm text-white/80 leading-relaxed">{sprintSelected?.longdescription || '-'}</p>
               </div>
+
+              {historySteps.length > 0 && (
+                <div className="glass-card rounded-xl p-3">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <ClockIcon className="w-3 h-3 text-white/40" />
+                    <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold">History</p>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    {historySteps.map((entry, i) => (
+                      <div key={i} className="flex items-center gap-2 text-xs text-white/60">
+                        <span className="text-white/35 tabular-nums shrink-0">
+                          {new Date(entry.at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
+                        </span>
+                        <span className="text-white/40">{entry.from}</span>
+                        <span className="text-white/25">→</span>
+                        <span className="text-violet-300/80">{entry.to}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="mt-5 pt-4 border-t border-white/8">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold text-center mb-3">
-                Move to
-              </p>
+              <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold text-center mb-3">Move to</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {[...scrumSteps]
                   .sort((a, b) => a.order - b.order)

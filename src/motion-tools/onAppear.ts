@@ -30,3 +30,19 @@ export const scaleOnAppear = {
     transition: { duration: 0.45, ease },
   },
 }
+
+export const columnOnAppear = {
+  hidden: { opacity: 0, x: -16 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.45, ease, delay: i * 0.07 },
+  }),
+}
+
+export const sprintCardExit = {
+  opacity: 0,
+  scale: 0.95,
+  y: -6,
+  transition: { duration: 0.2, ease },
+}
