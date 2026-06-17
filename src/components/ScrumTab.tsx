@@ -10,8 +10,18 @@ import { useSelectContext } from '@/src/contexts/SelectedContext'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
 import { SnackBarStatus } from '@/src/types/SnackBarStatus'
 import { SprintType } from '@/src/types/SprintType'
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
 import axios from 'axios'
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { columnOnAppear } from '@/src/motion-tools/onAppear'
 
@@ -28,14 +38,19 @@ const ScrumTab = ({ scrumSteps, sprints, iduser, filter }: Props) => {
   const [isOpenModalCreateSprint, setIsOpenModalCreateSprint] = useState(false)
   const [isOpenModalEditSprint, setIsOpenModalEditSprint] = useState(false)
   const [openConfirmeMessage, setOpenConfirmeMessage] = useState(false)
+  const [activeSprint, setActiveSprint] = useState<SprintType | null>(null)
   const [snackBar, setSnackBar] = useState<{ error: SnackBarStatus; success: SnackBarStatus }>({
     error: { active: false, message: null },
     success: { active: false, message: null },
   })
-  const draggedSprintRef = useRef<SprintType | null>(null)
 
   const sortedSteps = [...scrumSteps].sort((a, b) => a.order - b.order)
   const lastStepId = sortedSteps[sortedSteps.length - 1]?.idscrumstep
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } })
+  )
 
   const resetSnackBar = () => {
     setTimeout(() => {
@@ -57,10 +72,18 @@ const ScrumTab = ({ scrumSteps, sprints, iduser, filter }: Props) => {
     }
   }
 
-  const handleDrop = async (targetStepId: number) => {
-    const sprint = draggedSprintRef.current
+  const handleDragStart = (event: DragStartEvent) => {
+    const sprint = event.active.data.current?.sprint as SprintType
+    setActiveSprint(sprint ?? null)
+  }
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event
+    setActiveSprint(null)
+    if (!over) return
+    const targetStepId = Number(over.id)
+    const sprint = active.data.current?.sprint as SprintType
     if (!sprint || sprint.idscrumstep === targetStepId) return
-    if (targetStepId === lastStepId) return
     const fromStep = scrumSteps.find((s) => s.idscrumstep === sprint.idscrumstep)
     const toStep = scrumSteps.find((s) => s.idscrumstep === targetStepId)
     try {
@@ -74,8 +97,6 @@ const ScrumTab = ({ scrumSteps, sprints, iduser, filter }: Props) => {
     } catch {
       setSnackBar((prev) => ({ ...prev, error: { message: 'Failed to move sprint.', active: true } }))
       resetSnackBar()
-    } finally {
-      draggedSprintRef.current = null
     }
   }
 
@@ -99,9 +120,9 @@ const ScrumTab = ({ scrumSteps, sprints, iduser, filter }: Props) => {
 
   return (
     <>
-      <div className="carousel carousel-center w-full space-x-3 mt-4 px-4 pb-2 h-[calc(100vh-260px)] sm:h-[calc(100vh-190px)]">
-        {sortedSteps
-          .map((step: ScrumStepType, index: number) => {
+      <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <div className="carousel carousel-center w-full space-x-3 mt-4 px-4 pb-2 h-[calc(100vh-260px)] sm:h-[calc(100vh-190px)]">
+          {sortedSteps.map((step: ScrumStepType, index: number) => {
             const isClosed = step.idscrumstep === lastStepId
             const filtered = filterSprints(sprints.filter((s) => s.idscrumstep === step.idscrumstep))
             return (
@@ -137,13 +158,26 @@ const ScrumTab = ({ scrumSteps, sprints, iduser, filter }: Props) => {
                   openCreateModal={() => setIsOpenModalCreateSprint(true)}
                   openConfirmDeleteSprint={() => setOpenConfirmeMessage(true)}
                   openEditModal={() => setIsOpenModalEditSprint(true)}
-                  onDragStart={(sprint) => { draggedSprintRef.current = sprint }}
-                  onDrop={handleDrop}
                 />
               </motion.div>
             )
           })}
-      </div>
+        </div>
+
+        <DragOverlay dropAnimation={null}>
+          {activeSprint ? (
+            <div className="glass-card rounded-xl p-3.5 shadow-2xl ring-1 ring-violet-400/40 opacity-95 rotate-1 w-56 pointer-events-none">
+              <span className="glass-badge">{activeSprint.tag}</span>
+              {activeSprint.title && (
+                <p className="text-sm font-medium text-white/90 mt-2 leading-snug">{activeSprint.title}</p>
+              )}
+              {activeSprint.shortdescription && (
+                <p className="text-xs text-white/50 mt-1 line-clamp-2">{activeSprint.shortdescription}</p>
+              )}
+            </div>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
 
       <CreateSprint
         idUser={iduser}
