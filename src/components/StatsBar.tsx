@@ -23,7 +23,7 @@ const StatsBar = ({ sprints, scrumsteps }: Props) => {
   const sortedSteps = [...scrumsteps].sort((a, b) => a.order - b.order)
 
   return (
-    <div className="flex items-center gap-3 px-4 py-2 flex-wrap">
+    <div className="flex items-center gap-2 px-4 py-2 overflow-x-auto flex-nowrap">
       <div className="glass-card rounded-xl px-3 py-1.5 flex items-center gap-2">
         <span className="text-[10px] text-white/40 uppercase tracking-wider font-semibold">Total</span>
         <span className="text-sm font-semibold text-white/85 tabular-nums">{sprints.length}</span>

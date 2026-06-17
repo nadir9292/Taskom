@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next'
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://flowboro.app'
+const siteUrl = (
+  process.env.NEXT_PUBLIC_APP_URL || 'https://flowboro.vercel.app'
+).replace(/\/$/, '')
 
 export default function robots(): MetadataRoute.Robots {
   return {

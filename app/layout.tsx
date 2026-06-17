@@ -1,7 +1,7 @@
 import RootLayoutClient from '@/app/RootLayoutClient'
 import type { Metadata, Viewport } from 'next'
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://flowboro.app'
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://flowboro.vercel.app/'
 
 const title =
   'Flowboro — Logiciel kanban open source pour équipes agiles'
@@ -62,12 +62,21 @@ export const metadata: Metadata = {
     description,
     url: siteUrl,
     locale: 'fr_FR',
+    images: [
+      {
+        url: '/icon-512x512.png',
+        width: 512,
+        height: 512,
+        alt: 'Flowboro — Logiciel kanban open source',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title,
     description,
     creator: '@flowboro',
+    images: ['/icon-512x512.png'],
   },
   robots: {
     index: true,

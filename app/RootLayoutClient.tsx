@@ -14,7 +14,7 @@ const montserrat = Montserrat({
   display: 'swap',
 })
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://flowboro.app'
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://flowboro.vercel.app/'
 
 const jsonLd = {
   '@context': 'https://schema.org',

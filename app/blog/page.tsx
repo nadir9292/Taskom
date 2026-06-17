@@ -30,9 +30,19 @@ const Blog = () => {
     })),
   }
 
+  const breadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteUrl}/blog` },
+    ],
+  }
+
   return (
     <MarketingShell>
       <JsonLd data={itemList} />
+      <JsonLd data={breadcrumb} />
       <section className="w-[92vw] max-w-4xl mx-auto text-center mt-16 sm:mt-24">
         <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-white">
           Le blog Flowboro

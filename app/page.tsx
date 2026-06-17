@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   keywords,
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'Flowboro — Le kanban open source pour équipes agiles',
+    title: 'Flowboro — Logiciel kanban open source pour équipes agiles',
     description: brand.description,
     url: siteUrl,
     type: 'website',
@@ -159,10 +159,23 @@ const Home = () => {
     },
   }
 
+  const softwareJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: brand.name,
+    applicationCategory: 'ProjectManagementApplication',
+    operatingSystem: 'Web',
+    inLanguage: 'fr',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+    url: siteUrl,
+    description: brand.description,
+  }
+
   return (
     <MarketingShell>
       <JsonLd data={faqJsonLd} />
       <JsonLd data={websiteJsonLd} />
+      <JsonLd data={softwareJsonLd} />
 
       <Hero />
 

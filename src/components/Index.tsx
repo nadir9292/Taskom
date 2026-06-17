@@ -237,7 +237,7 @@ const Index = ({ user }: Props) => {
                     transition={{ duration: 0.22 }}
                     className="overflow-hidden px-4 mt-2"
                   >
-                    <div className="flex gap-2 flex-wrap">
+                    <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
                       <select
                         value={filterTag}
                         onChange={(e) => setFilterTag(e.target.value)}
@@ -263,7 +263,7 @@ const Index = ({ user }: Props) => {
                       {hasFilter && (
                         <button
                           onClick={() => { setFilterQuery(''); setFilterTag(''); setFilterMember('') }}
-                          className="btn-glass py-1.5 px-3 text-xs"
+                          className="col-span-2 sm:col-auto btn-glass py-1.5 px-3 text-xs"
                         >
                           Clear filters
                         </button>

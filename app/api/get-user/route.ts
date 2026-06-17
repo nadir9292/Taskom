@@ -29,10 +29,16 @@ export async function GET(req: NextRequest) {
       .eq('email', email)
       .single()
 
-    if (error) throw error
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return NextResponse.json({ message: 'User not found' }, { status: 404 })
+      }
+      throw error
+    }
 
     return encryptedJson(data, session.user.email)
-  } catch {
+  } catch (err) {
+    console.error('[get-user]', err)
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 })
   }
 }

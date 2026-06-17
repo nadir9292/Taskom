@@ -1,5 +1,6 @@
-export const siteUrl =
-  process.env.NEXT_PUBLIC_APP_URL || 'https://flowboro.app'
+export const siteUrl = (
+  process.env.NEXT_PUBLIC_APP_URL || 'https://flowboro.vercel.app'
+).replace(/\/$/, '')
 
 export const githubUrl = 'https://github.com/nadir9292/Taskom'
 
