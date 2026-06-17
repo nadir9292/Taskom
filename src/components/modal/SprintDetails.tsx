@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSelectContext } from '@/src/contexts/SelectedContext'
-import { XMarkIcon, StarIcon, ClockIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, StarIcon, ClockIcon, LockClosedIcon } from '@heroicons/react/24/outline'
 import { StarIcon as StarSolid } from '@heroicons/react/24/solid'
 import React, { useState } from 'react'
 import { ScrumStepType } from '@/src/types/ScrumStepType'
@@ -109,6 +109,10 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
   const unassigned = myTeam.filter((m) => !members.includes(m.iduser!))
   const historySteps = getHistorySteps()
 
+  const sortedSteps = [...scrumSteps].sort((a, b) => a.order - b.order)
+  const lastStep = sortedSteps[sortedSteps.length - 1]
+  const isSprintClosed = sprintSelected?.idscrumstep === lastStep?.idscrumstep
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -133,7 +137,15 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
                 <XMarkIcon className="w-5 h-5 text-white/60" />
               </button>
               <div className="w-10 h-1 rounded-full bg-white/20 mx-auto absolute left-1/2 -translate-x-1/2 top-3" />
-              <span className="glass-badge">{sprintSelected?.tag}</span>
+              <div className="flex items-center gap-2">
+                {isSprintClosed && (
+                  <span className="flex items-center gap-1 text-[10px] px-2 py-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+                    <LockClosedIcon className="w-3 h-3" />
+                    Closed
+                  </span>
+                )}
+                <span className="glass-badge">{sprintSelected?.tag}</span>
+              </div>
             </div>
 
             <h1 className="text-lg font-semibold text-white text-center mb-1.5">
@@ -244,20 +256,49 @@ const SprintDetails = ({ isOpen, closeSprintDetails, scrumSteps }: Props) => {
             </div>
 
             <div className="mt-5 pt-4 border-t border-white/8">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold text-center mb-3">Move to</p>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {[...scrumSteps]
-                  .sort((a, b) => a.order - b.order)
-                  .map((step) => (
-                    <button
-                      key={step.idscrumstep}
-                      className="btn-glass text-xs py-1.5 px-3"
-                      onClick={() => updateSprintStep(step)}
-                    >
-                      {step.title}
-                    </button>
-                  ))}
-              </div>
+              {!isSprintClosed && (
+                <>
+                  <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold text-center mb-3">Move to</p>
+                  <div className="flex flex-wrap gap-2 justify-center mb-3">
+                    {sortedSteps
+                      .filter((s) => s.idscrumstep !== lastStep?.idscrumstep)
+                      .map((step) => (
+                        <button
+                          key={step.idscrumstep}
+                          className="btn-glass text-xs py-1.5 px-3"
+                          onClick={() => updateSprintStep(step)}
+                        >
+                          {step.title}
+                        </button>
+                      ))}
+                  </div>
+                  <button
+                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/20 hover:border-emerald-400/60 transition-all duration-200"
+                    onClick={() => lastStep && updateSprintStep(lastStep)}
+                  >
+                    <LockClosedIcon className="w-3.5 h-3.5" />
+                    Close Sprint
+                  </button>
+                </>
+              )}
+              {isSprintClosed && (
+                <>
+                  <p className="text-[10px] text-white/40 uppercase tracking-wider font-semibold text-center mb-3">Reopen to</p>
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {sortedSteps
+                      .filter((s) => s.idscrumstep !== lastStep?.idscrumstep)
+                      .map((step) => (
+                        <button
+                          key={step.idscrumstep}
+                          className="btn-glass text-xs py-1.5 px-3"
+                          onClick={() => updateSprintStep(step)}
+                        >
+                          {step.title}
+                        </button>
+                      ))}
+                  </div>
+                </>
+              )}
             </div>
 
             <SnackBar error={snackBar.error} success={snackBar.success} />

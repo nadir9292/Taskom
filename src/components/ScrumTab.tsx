@@ -34,6 +34,9 @@ const ScrumTab = ({ scrumSteps, sprints, iduser, filter }: Props) => {
   })
   const draggedSprintRef = useRef<SprintType | null>(null)
 
+  const sortedSteps = [...scrumSteps].sort((a, b) => a.order - b.order)
+  const lastStepId = sortedSteps[sortedSteps.length - 1]?.idscrumstep
+
   const resetSnackBar = () => {
     setTimeout(() => {
       setSnackBar({ error: { active: false, message: null }, success: { active: false, message: null } })
@@ -57,6 +60,7 @@ const ScrumTab = ({ scrumSteps, sprints, iduser, filter }: Props) => {
   const handleDrop = async (targetStepId: number) => {
     const sprint = draggedSprintRef.current
     if (!sprint || sprint.idscrumstep === targetStepId) return
+    if (targetStepId === lastStepId) return
     const fromStep = scrumSteps.find((s) => s.idscrumstep === sprint.idscrumstep)
     const toStep = scrumSteps.find((s) => s.idscrumstep === targetStepId)
     try {
@@ -96,9 +100,9 @@ const ScrumTab = ({ scrumSteps, sprints, iduser, filter }: Props) => {
   return (
     <>
       <div className="carousel carousel-center w-full space-x-3 mt-4 px-4 pb-2 h-[calc(100vh-260px)] sm:h-[calc(100vh-190px)]">
-        {[...scrumSteps]
-          .sort((a, b) => a.order - b.order)
+        {sortedSteps
           .map((step: ScrumStepType, index: number) => {
+            const isClosed = step.idscrumstep === lastStepId
             const filtered = filterSprints(sprints.filter((s) => s.idscrumstep === step.idscrumstep))
             return (
               <motion.div
@@ -107,13 +111,21 @@ const ScrumTab = ({ scrumSteps, sprints, iduser, filter }: Props) => {
                 variants={columnOnAppear}
                 initial="hidden"
                 animate="visible"
-                className="carousel-item glass-col rounded-2xl p-4 w-[88vw] sm:w-64 overflow-y-auto flex flex-col max-h-[calc(100vh-330px)] sm:max-h-[calc(100vh-250px)]"
+                className={`carousel-item rounded-2xl p-4 w-[88vw] sm:w-64 overflow-y-auto flex flex-col max-h-[calc(100vh-330px)] sm:max-h-[calc(100vh-250px)] ${
+                  isClosed
+                    ? 'border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-xl'
+                    : 'glass-col'
+                }`}
               >
                 <div className="flex justify-between items-center mb-4">
-                  <p className="text-xs font-semibold text-white/80 uppercase tracking-widest">
+                  <p className={`text-xs font-semibold uppercase tracking-widest ${isClosed ? 'text-emerald-400/80' : 'text-white/80'}`}>
                     {step.title}
                   </p>
-                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-white/10 text-white/60 border border-white/12 font-medium tabular-nums">
+                  <span className={`text-[11px] px-2.5 py-0.5 rounded-full border font-medium tabular-nums ${
+                    isClosed
+                      ? 'bg-emerald-500/15 text-emerald-400/70 border-emerald-500/25'
+                      : 'bg-white/10 text-white/60 border-white/12'
+                  }`}>
                     {filtered.length}
                   </span>
                 </div>
@@ -121,6 +133,7 @@ const ScrumTab = ({ scrumSteps, sprints, iduser, filter }: Props) => {
                 <Sprints
                   sprints={filtered}
                   idscrumstep={step.idscrumstep}
+                  isClosed={isClosed}
                   openCreateModal={() => setIsOpenModalCreateSprint(true)}
                   openConfirmDeleteSprint={() => setOpenConfirmeMessage(true)}
                   openEditModal={() => setIsOpenModalEditSprint(true)}

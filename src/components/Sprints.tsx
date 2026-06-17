@@ -3,7 +3,7 @@ import { useSelectContext } from '@/src/contexts/SelectedContext'
 import { SprintType } from '@/src/types/SprintType'
 import { UserType } from '@/src/types/UserType'
 import UserAvatar from '@/src/components/utils/UserAvatar'
-import { CalendarIcon, PencilSquareIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { CalendarIcon, LockClosedIcon, PencilSquareIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { containerOnAppear, itemOnAppear, sprintCardExit } from '@/src/motion-tools/onAppear'
@@ -11,6 +11,7 @@ import { containerOnAppear, itemOnAppear, sprintCardExit } from '@/src/motion-to
 type Props = {
   sprints: SprintType[]
   idscrumstep: number
+  isClosed?: boolean
   openCreateModal: () => void
   openConfirmDeleteSprint: () => void
   openEditModal: () => void
@@ -21,6 +22,7 @@ type Props = {
 const Sprints = ({
   sprints,
   idscrumstep,
+  isClosed = false,
   openCreateModal,
   openConfirmDeleteSprint,
   openEditModal,
@@ -104,17 +106,25 @@ const Sprints = ({
               variants={itemOnAppear}
               exit={sprintCardExit}
               layout
-              whileHover={{ y: -2, transition: { duration: 0.18 } }}
+              whileHover={{ y: isClosed ? 0 : -2, transition: { duration: 0.18 } }}
               onClick={() => onSelectSprint(sprint)}
-              draggable
+              draggable={!isClosed}
               onDragStart={(e) => {
+                if (isClosed) { e.preventDefault(); return }
                 e.stopPropagation()
                 onDragStart(sprint)
               }}
-              className="group glass-card rounded-xl p-3.5 cursor-grab active:cursor-grabbing active:opacity-60 active:scale-95 transition-[opacity,transform] duration-150"
+              className={`group glass-card rounded-xl p-3.5 transition-[opacity,transform] duration-150 ${
+                isClosed
+                  ? 'cursor-default border border-emerald-500/20 bg-emerald-500/5 opacity-75'
+                  : 'cursor-grab active:cursor-grabbing active:opacity-60 active:scale-95'
+              }`}
             >
               <div className="flex items-start justify-between mb-2">
-                <span className="glass-badge">{sprint.tag}</span>
+                <div className="flex items-center gap-1.5">
+                  {isClosed && <LockClosedIcon className="w-3 h-3 text-emerald-400/70 shrink-0" />}
+                  <span className={`glass-badge ${isClosed ? 'opacity-60' : ''}`}>{sprint.tag}</span>
+                </div>
                 <div className="flex items-center gap-1.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200">
                   <button
                     onClick={(e) => {
@@ -140,7 +150,7 @@ const Sprints = ({
               </div>
 
               {sprint.title && (
-                <p className="text-sm font-medium text-white/90 mb-1.5 leading-snug">
+                <p className={`text-sm font-medium mb-1.5 leading-snug ${isClosed ? 'text-white/55' : 'text-white/90'}`}>
                   {sprint.title}
                 </p>
               )}
@@ -160,7 +170,12 @@ const Sprints = ({
                     </div>
                   )}
                 </div>
-                {(() => {
+                {isClosed ? (
+                  <span className="flex items-center gap-1 text-[10px] text-emerald-400/70">
+                    <LockClosedIcon className="w-3 h-3" />
+                    Closed
+                  </span>
+                ) : (() => {
                   const deadline = getDeadlineInfo(sprint.enddate)
                   return deadline ? (
                     <span className={`flex items-center gap-1 text-[10px] ${deadline.color}`}>
